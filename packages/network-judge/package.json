@@ -1,0 +1,11 @@
+{
+  "name": "network-judge",
+  "version": "0.0.1",
+  "description": "Find bad patterns in your network calls.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["fetch", "network"],
+  "license": "MIT"
+}
