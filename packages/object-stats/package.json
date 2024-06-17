@@ -1,11 +1,11 @@
 {
-  "name": "object-stats",
-  "version": "0.0.1",
-  "description": "See how your objects are used throughout your codes execution",
-  "main": "index.js",
-  "scripts": {
-    "test": "node --test"
-  },
-  "keywords": ["object", "statistics"],
-  "license": "MIT"
+	"name": "object-stats",
+	"version": "0.0.1",
+	"description": "See how your objects are used throughout your codes execution",
+	"main": "index.js",
+	"scripts": {
+		"test": "node --test"
+	},
+	"keywords": ["object", "statistics"],
+	"license": "MIT"
 }

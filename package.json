@@ -1,16 +1,20 @@
 {
-  "name": "network-judge-monorepo",
-  "version": "0.0.1",
-  "description": "Monorepo for network-judge and related projects",
-  "private": true,
-  "workspaces": ["packages/*"],
-  "license": "MIT",
-  "packageManager": "npm@10.2.0",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SorenHolstHansen/network-judge.git"
-  }
+	"name": "network-judge-monorepo",
+	"version": "0.0.1",
+	"description": "Monorepo for network-judge and related projects",
+	"private": true,
+	"workspaces": ["packages/*"],
+	"license": "MIT",
+	"packageManager": "npm@10.2.0",
+	"scripts": {
+		"lint": "npx @biomejs/biome check --write .",
+		"test": "node --test"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/SorenHolstHansen/network-judge.git"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.8.1"
+	}
 }

@@ -1,37 +1,40 @@
 const objectStats = require("object-stats");
 const urlsDifferOnlyInOneParam = require("./detectUrlsThatDifferOnlyByParams");
 
-const deepEqual = function(x, y) {
-  if (x === y) {
-    return true;
-  }
-  else if ((typeof x == "object" && x != null) && (typeof y == "object" && y != null)) {
-    if (Object.keys(x).length != Object.keys(y).length)
-      return false;
+function deepEqual(x, y) {
+	if (x === y) {
+		return true;
+	}
 
-    for (var prop in x) {
-      if (y.hasOwnProperty(prop)) {
-        if (!deepEqual(x[prop], y[prop]))
-          return false;
-      }
-      else
-        return false;
-    }
+	if (
+		typeof x === "object" &&
+		x != null &&
+		typeof y === "object" &&
+		y != null
+	) {
+		if (Object.keys(x).length !== Object.keys(y).length) return false;
 
-    return true;
-  }
-  else
-    return false;
+		for (const prop in x) {
+			// biome-ignore lint/suspicious/noPrototypeBuiltins:
+			if (y.hasOwnProperty(prop)) {
+				if (!deepEqual(x[prop], y[prop])) return false;
+			} else return false;
+		}
+
+		return true;
+	}
+
+	return false;
 }
 
-/** 
+/**
  * @typedef {Object} StoreValue
  * @property {Date} lastCalledAt
  * @property {any} jsonResponse
  */
 
 /**
- * @type {Record<string, StoreValue>} 
+ * @type {Record<string, StoreValue>}
  */
 const store = {};
 
@@ -43,72 +46,79 @@ const store = {};
  */
 
 /**
- * @param {NetworkJudgeOptions} options
+ * @param {NetworkJudgeOptions} opt
  */
-module.exports = function networkJudge(options) {
-  options = {
-    onDuplicateResponseDetected: (url) => {
-      console.warn(`You have previously made the same call (url: ${url}) that got the exact same response. Perhaps consider a (better) cache solution, or remove the duplicate calls.`);
-    },
-    onQueriesInLoopsDetected: (urls) => {
-      console.warn(`It seems like you are fetching the same url, but with different id's, lots of times in a row. This might suggest you are fetching some resource in a loop. e.g. fetching /todos/1, /todos/2, /todos/3 and so on. The URL's called are \n - ${urls.join("\n - ")}`)
-    },
-    queryInLoopThreshold: 3,
-    ...options
-  };
-  const origFetch = fetch;
+module.exports = function networkJudge(opt) {
+	const options = {
+		onDuplicateResponseDetected: (url) => {
+			console.warn(
+				`You have previously made the same call (url: ${url}) that got the exact same response. Perhaps consider a (better) cache solution, or remove the duplicate calls.`,
+			);
+		},
+		onQueriesInLoopsDetected: (urls) => {
+			console.warn(
+				`It seems like you are fetching the same url, but with different id's, lots of times in a row. This might suggest you are fetching some resource in a loop. e.g. fetching /todos/1, /todos/2, /todos/3 and so on. The URL's called are \n - ${urls.join("\n - ")}`,
+			);
+		},
+		queryInLoopThreshold: 3,
+		...opt,
+	};
+	const origFetch = fetch;
 
-  /**
-   * @param {RequestInfo | URL} input
-   * @param {RequestInit | undefined} init
-   */
-  fetch = async (input, init) => {
-    const res = await origFetch(input, init);
-    const url = input instanceof URL ? input.toString() : typeof input === "string" ? input : input.url;
+	/**
+	 * @param {RequestInfo | URL} input
+	 * @param {RequestInit | undefined} init
+	 */
+	// biome-ignore lint/suspicious/noGlobalAssign: This is sort of the whole point
+	fetch = async (input, init) => {
+		const res = await origFetch(input, init);
+		const url =
+			input instanceof URL
+				? input.toString()
+				: typeof input === "string"
+					? input
+					: input.url;
 
-    detectQueriesInLoops(url, options);
-    store[url] = { ...store[url], lastCalledAt: new Date() };
+		detectQueriesInLoops(url, options);
+		store[url] = { ...store[url], lastCalledAt: new Date() };
 
-    res.json = new Proxy(res.json, {
-      async apply(target, thisArg, argumentsList) {
-        const res = await Reflect.apply(...arguments);
-        if (store[url] && deepEqual(store[url].jsonResponse, res)) {
-          options.onDuplicateResponseDetected(url)
-        } else {
-          store[url] = { ...store[url], jsonResponse: res }
-        }
+		res.json = new Proxy(res.json, {
+			async apply(target, thisArg, argumentsList) {
+				const res = await Reflect.apply(target, thisArg, argumentsList);
+				if (store[url] && deepEqual(store[url].jsonResponse, res)) {
+					options.onDuplicateResponseDetected(url);
+				} else {
+					store[url] = { ...store[url], jsonResponse: res };
+				}
 
-        const resWithStats = objectStats(res);
+				const resWithStats = objectStats(res);
 
-        return resWithStats;
-      }
-    })
+				return resWithStats;
+			},
+		});
 
-    return res;
-  }
-}
-
-
-const hasNumberRegex = /\d/;
+		return res;
+	};
+};
 
 /**
  * @param {string} currentUrl
  * @param {NetworkJudgeOptions} options
  */
 function detectQueriesInLoops(currentUrl, options) {
-  const otherSimilarUrls = [];
-  const splitCurrentUrl = currentUrl.split("/");
-  for (const [url, value] of Object.entries(store)) {
-    if (url === currentUrl) continue;
-    const splitUrl = url.split("/");
-    if (urlsDifferOnlyInOneParam(splitCurrentUrl, splitUrl)) {
-      otherSimilarUrls.push(url);
-    }
-  }
+	const otherSimilarUrls = [];
+	const splitCurrentUrl = currentUrl.split("/");
+	for (const [url, value] of Object.entries(store)) {
+		if (url === currentUrl) continue;
+		const splitUrl = url.split("/");
+		if (urlsDifferOnlyInOneParam(splitCurrentUrl, splitUrl)) {
+			otherSimilarUrls.push(url);
+		}
+	}
 
-  otherSimilarUrls.push(currentUrl)
+	otherSimilarUrls.push(currentUrl);
 
-  if (otherSimilarUrls.length >= options.queryInLoopThreshold) {
-    options.onQueriesInLoopsDetected(otherSimilarUrls);
-  }
+	if (otherSimilarUrls.length >= options.queryInLoopThreshold) {
+		options.onQueriesInLoopsDetected(otherSimilarUrls);
+	}
 }

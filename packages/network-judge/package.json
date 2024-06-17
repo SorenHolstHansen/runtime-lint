@@ -1,14 +1,14 @@
 {
-  "name": "network-judge",
-  "version": "0.0.1",
-  "description": "Find bad patterns in your network calls.",
-  "main": "index.js",
-  "scripts": {
-    "test": "node --test"
-  },
-  "dependencies": {
-    "object-stats": "*"
-  },
-  "keywords": ["fetch", "network"],
-  "license": "MIT"
+	"name": "network-judge",
+	"version": "0.0.1",
+	"description": "Find bad patterns in your network calls.",
+	"main": "index.js",
+	"scripts": {
+		"test": "node --test"
+	},
+	"dependencies": {
+		"object-stats": "*"
+	},
+	"keywords": ["fetch", "network"],
+	"license": "MIT"
 }
