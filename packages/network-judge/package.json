@@ -3,12 +3,19 @@
 	"version": "0.0.1",
 	"description": "Find bad patterns in your network calls.",
 	"main": "index.js",
+	"types": "index.d.ts",
 	"scripts": {
 		"test": "node --test"
 	},
 	"dependencies": {
 		"object-stats": "*"
 	},
+	"exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
+  },
 	"keywords": ["fetch", "network"],
 	"license": "MIT"
 }

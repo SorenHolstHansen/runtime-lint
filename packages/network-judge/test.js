@@ -1,4 +1,4 @@
-const networkJudge = require("./index");
+const { networkJudge } = require("./index");
 const test = require("node:test");
 const assert = require("node:assert").strict;
 
@@ -7,7 +7,7 @@ test("Detects duplicate responses with the same responses", async () => {
 	networkJudge({
 		onDuplicateResponseDetected,
 		// Just to silence the console log
-		queryInLoopThreshold: () => {},
+		queryInLoopThreshold: () => { },
 	});
 
 	const res1 = await fetch("https://jsonplaceholder.typicode.com/todos/1");

@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"description": "Monorepo for network-judge and related projects",
 	"private": true,
-	"workspaces": ["packages/*"],
+	"workspaces": ["packages/*", "examples/*"],
 	"license": "MIT",
 	"packageManager": "npm@10.2.0",
 	"scripts": {

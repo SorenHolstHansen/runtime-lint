@@ -48,7 +48,7 @@ const store = {};
 /**
  * @param {NetworkJudgeOptions} opt
  */
-module.exports = function networkJudge(opt) {
+function networkJudge(opt) {
 	const options = {
 		onDuplicateResponseDetected: (url) => {
 			console.warn(
@@ -57,7 +57,7 @@ module.exports = function networkJudge(opt) {
 		},
 		onQueriesInLoopsDetected: (urls) => {
 			console.warn(
-				`It seems like you are fetching the same url, but with different id's, lots of times in a row. This might suggest you are fetching some resource in a loop. e.g. fetching /todos/1, /todos/2, /todos/3 and so on. The URL's called are \n - ${urls.join("\n - ")}`,
+				`It seems like you are fetching the same url, but with different id's, lots of times in a row. This might suggest you are fetching some resource in a loop e.g. fetching /todos/1, /todos/2, /todos/3 and so on. The URL's called are \n - ${urls.join("\n - ")}`,
 			);
 		},
 		queryInLoopThreshold: 3,
@@ -121,4 +121,8 @@ function detectQueriesInLoops(currentUrl, options) {
 	if (otherSimilarUrls.length >= options.queryInLoopThreshold) {
 		options.onQueriesInLoopsDetected(otherSimilarUrls);
 	}
+}
+
+module.exports = {
+	networkJudge
 }
