@@ -8,7 +8,7 @@
 	"packageManager": "npm@10.2.0",
 	"scripts": {
 		"lint": "npx @biomejs/biome check --write .",
-		"test": "node --test"
+		"test": "node --import tsx --test **/test/**/*.ts"
 	},
 	"repository": {
 		"type": "git",

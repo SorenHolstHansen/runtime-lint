@@ -2,20 +2,26 @@
 	"name": "network-judge",
 	"version": "0.0.1",
 	"description": "Find bad patterns in your network calls.",
-	"main": "index.js",
-	"types": "index.d.ts",
 	"scripts": {
-		"test": "node --test"
+		"test": "node --import tsx --test test/**/*.ts",
+		"build": "tsc"
 	},
 	"dependencies": {
 		"object-stats": "*"
 	},
-	"exports": {
-    ".": {
-      "types": "./index.d.ts",
-      "default": "./index.js"
-    }
-  },
 	"keywords": ["fetch", "network"],
-	"license": "MIT"
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"license": "MIT",
+	"devDependencies": {
+		"tsx": "^4.15.7"
+	}
 }

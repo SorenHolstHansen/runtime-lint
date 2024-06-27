@@ -2,10 +2,23 @@
 	"name": "object-stats",
 	"version": "0.0.1",
 	"description": "See how your objects are used throughout your codes execution",
-	"main": "index.js",
 	"scripts": {
-		"test": "node --test"
+		"test": "node --import tsx --test test/**/*.ts",
+		"build": "tsc"
+	},
+	"devDependencies": {
+		"tsx": "^4.15.7"
 	},
 	"keywords": ["object", "statistics"],
+	"type": "module",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
 	"license": "MIT"
 }

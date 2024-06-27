@@ -1,6 +1,6 @@
-const objectStats = require("./index");
-const test = require("node:test");
-const assert = require("node:assert").strict;
+import assert from "node:assert/strict";
+import test from "node:test";
+import { objectStats } from "../src/index";
 
 test("Simple index test", () => {
 	const a = objectStats({
@@ -55,13 +55,13 @@ test("Arrays work", () => {
 
 	a[1];
 
-	assert.strictEqual(a.__stats[1].count, 1);
+	assert.strictEqual(a.__stats[1]?.count, 1);
 });
 
 test("Arrays oj objects work", () => {
 	const a = objectStats([{ foo: "bar" }, 1, { a: 2 }]);
 
-	a[0].foo;
+	a[0]?.foo;
 
-	assert.strictEqual(a.__stats[0].inner.foo.count, 1);
+	assert.strictEqual(a.__stats[0]?.inner.foo?.count, 1);
 });
