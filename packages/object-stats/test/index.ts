@@ -45,8 +45,10 @@ test("__stats show stats of keys not present in the original object", () => {
 		foo: "bar",
 	});
 
+	// @ts-ignore
 	a.baz;
 
+	// @ts-ignore
 	assert.strictEqual(a.__stats.baz.count, 1);
 });
 
@@ -59,8 +61,9 @@ test("Arrays work", () => {
 });
 
 test("Arrays oj objects work", () => {
-	const a = objectStats([{ foo: "bar" }, 1, { a: 2 }]);
+	const a = objectStats([{ foo: "bar" }, 1, { b: 2 }]);
 
+	// @ts-ignore
 	a[0]?.foo;
 
 	assert.strictEqual(a.__stats[0]?.inner.foo?.count, 1);
