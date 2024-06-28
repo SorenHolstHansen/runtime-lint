@@ -1,5 +1,5 @@
 {
-	"name": "network-judge",
+	"name": "network-lint",
 	"version": "0.0.1",
 	"description": "Find bad patterns in your network calls.",
 	"scripts": {
