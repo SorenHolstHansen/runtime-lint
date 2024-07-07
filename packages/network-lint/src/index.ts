@@ -1,32 +1,6 @@
 import { objectStats } from "object-stats";
 import { urlsDifferOnlyInOneParam } from "./detectUrlsThatDifferOnlyByParams.js";
-
-// biome-ignore lint/suspicious/noExplicitAny: Don't really care about the type here
-function deepEqual(x: any, y: any) {
-	if (x === y) {
-		return true;
-	}
-
-	if (
-		typeof x === "object" &&
-		x != null &&
-		typeof y === "object" &&
-		y != null
-	) {
-		if (Object.keys(x).length !== Object.keys(y).length) return false;
-
-		for (const prop in x) {
-			// biome-ignore lint/suspicious/noPrototypeBuiltins:
-			if (y.hasOwnProperty(prop)) {
-				if (!deepEqual(x[prop], y[prop])) return false;
-			} else return false;
-		}
-
-		return true;
-	}
-
-	return false;
-}
+import { deepEqual } from "./deepEqual.js";
 
 type StoreValue = {
 	lastCalledAt: Date;
@@ -49,6 +23,10 @@ type NetworkJudgeOptions = {
 	 * The amount of similar urls to see before calling the onQueriesInLoopsDetected. Default to 3
 	 */
 	queryInLoopThreshold?: number;
+	/**
+	 * Callback to run whenever we detect a json response has been very underused, which could suggest overfetching.
+	 */
+	onUnderuseOfResponseDetected?: (url: string) => void;
 };
 function networkJudge({
 	onDuplicateResponseDetected = (url) => {
@@ -62,11 +40,17 @@ function networkJudge({
 		);
 	},
 	queryInLoopThreshold = 3,
+	onUnderuseOfResponseDetected = (url) => {
+		console.warn(
+			`We detected a json response that was very under-utilized, this might suggest that you are overfetching your api. The url is ${url}`,
+		);
+	},
 }: NetworkJudgeOptions) {
 	const options: Required<NetworkJudgeOptions> = {
 		onDuplicateResponseDetected,
 		onQueriesInLoopsDetected,
 		queryInLoopThreshold,
+		onUnderuseOfResponseDetected,
 	};
 	const origFetch = fetch;
 
@@ -98,7 +82,7 @@ function networkJudge({
 					};
 				}
 
-				const resWithStats = objectStats(res);
+				const resWithStats = detectUnderuseOfResponse(res, url, options);
 
 				return resWithStats;
 			},
@@ -106,6 +90,40 @@ function networkJudge({
 
 		return res;
 	};
+}
+
+// biome-ignore lint/suspicious/noExplicitAny:
+function detectUnderuseOfResponse<T extends any[] | Record<string, any>>(
+	response: T,
+	url: string,
+	options: Required<NetworkJudgeOptions>,
+): T {
+	const statObject = objectStats(response);
+
+	void new Promise((resolve) => {
+		setTimeout(() => {
+			if (Array.isArray(response)) {
+				const arrayElemsUnused = Object.values(statObject.__stats).filter(
+					(value) => value.count == null || value.count === 0,
+				).length;
+				if (arrayElemsUnused > response.length / 2) {
+					options.onUnderuseOfResponseDetected(url);
+				}
+			} else {
+				// Is a simple object. Only check top-level keys and check if under half of them have been used
+				const numToplevelKeys = Object.keys(statObject).length;
+				const unaccessKeysCount = Object.values(statObject.__stats).filter(
+					(value) => value.count == null || value.count === 0,
+				).length;
+				if (unaccessKeysCount > numToplevelKeys / 2) {
+					options.onUnderuseOfResponseDetected(url);
+				}
+			}
+			resolve(undefined);
+		}, 1000);
+	});
+
+	return statObject as T;
 }
 
 function detectQueriesInLoops(
