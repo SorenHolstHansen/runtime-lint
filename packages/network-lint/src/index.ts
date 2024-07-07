@@ -1,6 +1,7 @@
 import { objectStats } from "object-stats";
-import { urlsDifferOnlyInOneParam } from "./detectUrlsThatDifferOnlyByParams";
+import { urlsDifferOnlyInOneParam } from "./detectUrlsThatDifferOnlyByParams.js";
 
+// biome-ignore lint/suspicious/noExplicitAny: Don't really care about the type here
 function deepEqual(x: any, y: any) {
 	if (x === y) {
 		return true;
@@ -29,7 +30,8 @@ function deepEqual(x: any, y: any) {
 
 type StoreValue = {
 	lastCalledAt: Date;
-	jsonResponse: any;
+	// biome-ignore lint/suspicious/noExplicitAny: Don't really care about the type here
+	jsonResponse?: any;
 };
 
 const store: Record<string, StoreValue> = {};
@@ -61,7 +63,7 @@ function networkJudge({
 	},
 	queryInLoopThreshold = 3,
 }: NetworkJudgeOptions) {
-	const options: NetworkJudgeOptions = {
+	const options: Required<NetworkJudgeOptions> = {
 		onDuplicateResponseDetected,
 		onQueriesInLoopsDetected,
 		queryInLoopThreshold,
@@ -88,7 +90,12 @@ function networkJudge({
 				if (store[url] && deepEqual(store[url].jsonResponse, res)) {
 					options.onDuplicateResponseDetected(url);
 				} else {
-					store[url] = { ...store[url], jsonResponse: res };
+					store[url] = {
+						// not strictly needed, but done to please ts
+						lastCalledAt: new Date(),
+						...store[url],
+						jsonResponse: res,
+					};
 				}
 
 				const resWithStats = objectStats(res);
@@ -103,11 +110,11 @@ function networkJudge({
 
 function detectQueriesInLoops(
 	currentUrl: string,
-	options: NetworkJudgeOptions,
+	options: Required<NetworkJudgeOptions>,
 ) {
 	const otherSimilarUrls: string[] = [];
 	const splitCurrentUrl = currentUrl.split("/");
-	for (const [url, value] of Object.entries(store)) {
+	for (const [url, _value] of Object.entries(store)) {
 		if (url === currentUrl) continue;
 		const splitUrl = url.split("/");
 		if (urlsDifferOnlyInOneParam(splitCurrentUrl, splitUrl)) {

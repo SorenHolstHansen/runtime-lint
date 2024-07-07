@@ -1,9 +1,24 @@
 // biome-ignore lint/suspicious/noExplicitAny:
 type ObjectStatsObject = Record<string, any> | any[];
-// biome-ignore lint/suspicious/noExplicitAny:
-type StatsOfType<T> = T extends (infer Inner)[] ? {count: number, inner: StatsOfType<Inner>}[] : T extends Record<string, any> ? {[Property in keyof T]: {count: number, inner: StatsOfType<T[Property]>} } : never;
-// biome-ignore lint/suspicious/noExplicitAny:
-export type ObjectWithStats<T> = T extends (infer S)[] ? ObjectWithStats<S>[] & {__stats: StatsOfType<T>} : T extends Record<string, any> ? {[Property in keyof T]: ObjectWithStats<T[Property]>} & {__stats: StatsOfType<T>} : T;
+type StatsOfType<T> = T extends (infer Inner)[]
+	? { count: number; inner: StatsOfType<Inner> }[]
+	: // biome-ignore lint/suspicious/noExplicitAny:
+		T extends Record<string, any>
+		? {
+				[Property in keyof T]: {
+					count: number;
+					inner: StatsOfType<T[Property]>;
+				};
+			}
+		: never;
+export type ObjectWithStats<T> = T extends (infer S)[]
+	? ObjectWithStats<S>[] & { __stats: StatsOfType<T> }
+	: // biome-ignore lint/suspicious/noExplicitAny:
+		T extends Record<string, any>
+		? { [Property in keyof T]: ObjectWithStats<T[Property]> } & {
+				__stats: StatsOfType<T>;
+			}
+		: T;
 
 export function objectStats<T extends ObjectStatsObject>(
 	inner: T,
@@ -17,8 +32,8 @@ export function objectStats<T extends ObjectStatsObject>(
 	}
 
 	const stats = () => {
-			// biome-ignore lint/suspicious/noExplicitAny:
-		const stats: Record<string, {count?: number, inner?: any}> = {};
+		// biome-ignore lint/suspicious/noExplicitAny:
+		const stats: Record<string, { count?: number; inner?: any }> = {};
 		for (const key of Object.keys(counter)) {
 			stats[key] = { count: counter[key] };
 		}

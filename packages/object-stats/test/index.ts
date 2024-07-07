@@ -60,7 +60,7 @@ test("Arrays work", () => {
 	assert.strictEqual(a.__stats[1]?.count, 1);
 });
 
-test("Arrays oj objects work", () => {
+test("Arrays of objects work", () => {
 	const a = objectStats([{ foo: "bar" }, 1, { b: 2 }]);
 
 	// @ts-ignore

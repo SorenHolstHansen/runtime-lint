@@ -1,13 +1,17 @@
 {
 	"name": "network-lint",
 	"version": "0.0.1",
-	"description": "Find bad patterns in your network calls.",
+	"description": "A runtime linter for your network calls.",
 	"scripts": {
 		"test": "node --import tsx --test test/**/*.ts",
 		"build": "tsc"
 	},
 	"dependencies": {
 		"object-stats": "*"
+	},
+	"devDependencies": {
+		"@types/node": "^20.14.9",
+		"tsx": "^4.15.7"
 	},
 	"keywords": ["fetch", "network"],
 	"main": "dist/index.js",
@@ -20,8 +24,5 @@
 		},
 		"./package.json": "./package.json"
 	},
-	"license": "MIT",
-	"devDependencies": {
-		"tsx": "^4.15.7"
-	}
+	"license": "MIT"
 }
