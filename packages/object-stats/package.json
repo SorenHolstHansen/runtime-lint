@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"description": "See how your objects are used throughout your codes execution",
 	"scripts": {
-		"test": "node --import tsx --test test/**/*.ts",
+		"test": "node --import tsx --test test/**/*.test.ts",
 		"build": "tsc"
 	},
 	"devDependencies": {

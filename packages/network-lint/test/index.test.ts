@@ -10,10 +10,10 @@ test("Detects duplicate responses with the same responses", async () => {
 		},
 	});
 
-	const res1 = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+	const res1 = await fetch("http://localhost:3000/todos/1");
 	await res1.json();
 
-	const res2 = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+	const res2 = await fetch("http://localhost:3000/todos/1");
 	const jsonRes2 = await res2.json();
 
 	jsonRes2.userId;
@@ -29,9 +29,9 @@ test("Detects queries in loops", async () => {
 		},
 	});
 
-	await fetch("https://jsonplaceholder.typicode.com/todos/1");
-	await fetch("https://jsonplaceholder.typicode.com/todos/2");
-	await fetch("https://jsonplaceholder.typicode.com/todos/3");
+	await fetch("http://localhost:3000/todos/1");
+	await fetch("http://localhost:3000/todos/2");
+	await fetch("http://localhost:3000/todos/3");
 
 	assert(onQueriesInLoopsDetected.mock.callCount() > 0);
 });
@@ -49,7 +49,7 @@ test("Detects simple overfetching of simple object (less than half of the keys h
 		},
 	});
 
-	const res = await fetch("https://jsonplaceholder.typicode.com/todos/5");
+	const res = await fetch("http://localhost:3000/todos/5");
 	const resJson = await res.json();
 	resJson.id;
 
@@ -66,7 +66,7 @@ test("It doesn't flag overfetching if a lot of the fields are used", async () =>
 		},
 	});
 
-	const res = await fetch("https://jsonplaceholder.typicode.com/todos/6");
+	const res = await fetch("http://localhost:3000/todos/6");
 	const resJson = await res.json();
 	resJson.id;
 	resJson.title;
@@ -85,7 +85,7 @@ test("Detects simple overfetching of array (too many array elements are being fe
 		},
 	});
 
-	const res = await fetch("https://jsonplaceholder.typicode.com/todos");
+	const res = await fetch("http://localhost:3000/todos");
 	const resJson = await res.json();
 	resJson[0];
 
@@ -102,7 +102,7 @@ test("It doesn't flag overfetching if a lot of the entries have been used", asyn
 		},
 	});
 
-	const res = await fetch("https://jsonplaceholder.typicode.com/todos");
+	const res = await fetch("http://localhost:3000/todos");
 	const resJson = await res.json();
 	for (let i = 0; i < resJson.length; i++) {
 		resJson[i];

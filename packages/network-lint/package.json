@@ -3,7 +3,8 @@
 	"version": "0.0.1",
 	"description": "A runtime linter for your network calls.",
 	"scripts": {
-		"test": "node --import tsx --test test/**/*.ts",
+		"start-api": "node test/api/api.js",
+		"test": "node --import tsx --test test/**/*.test.ts",
 		"build": "tsc"
 	},
 	"dependencies": {
@@ -13,7 +14,10 @@
 		"@types/node": "^20.14.9",
 		"tsx": "^4.15.7"
 	},
-	"keywords": ["fetch", "network"],
+	"keywords": [
+		"fetch",
+		"network"
+	],
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"type": "module",

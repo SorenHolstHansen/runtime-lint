@@ -3,12 +3,15 @@
 	"version": "0.0.1",
 	"description": "Monorepo for network-lint and related projects",
 	"private": true,
-	"workspaces": ["packages/*", "examples/*"],
+	"workspaces": [
+		"packages/*",
+		"examples/*"
+	],
 	"license": "MIT",
 	"packageManager": "npm@10.2.0",
 	"scripts": {
 		"lint": "npx @biomejs/biome check --write .",
-		"test": "node --import tsx --test **/test/**/*.ts"
+		"test": "node --import tsx --test **/test/**/*.test.ts"
 	},
 	"repository": {
 		"type": "git",
