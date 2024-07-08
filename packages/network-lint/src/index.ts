@@ -10,7 +10,7 @@ type StoreValue = {
 
 const store: Record<string, StoreValue> = {};
 
-type NetworkJudgeOptions = {
+type Config = {
 	/**
 	 * Callback to run when we detect multiple calls to the same endpoint with the exact same response. Defaults to a console.warn log
 	 */
@@ -45,8 +45,8 @@ function networkJudge({
 			`We detected a json response that was very under-utilized, this might suggest that you are overfetching your api. The url is ${url}`,
 		);
 	},
-}: NetworkJudgeOptions) {
-	const options: Required<NetworkJudgeOptions> = {
+}: Config) {
+	const options: Required<Config> = {
 		onDuplicateResponseDetected,
 		onQueriesInLoopsDetected,
 		queryInLoopThreshold,
@@ -96,7 +96,7 @@ function networkJudge({
 function detectUnderuseOfResponse<T extends any[] | Record<string, any>>(
 	response: T,
 	url: string,
-	options: Required<NetworkJudgeOptions>,
+	options: Required<Config>,
 ): T {
 	const statObject = objectStats(response);
 
@@ -128,7 +128,7 @@ function detectUnderuseOfResponse<T extends any[] | Record<string, any>>(
 
 function detectQueriesInLoops(
 	currentUrl: string,
-	options: Required<NetworkJudgeOptions>,
+	options: Required<Config>,
 ) {
 	const otherSimilarUrls: string[] = [];
 	const splitCurrentUrl = currentUrl.split("/");
