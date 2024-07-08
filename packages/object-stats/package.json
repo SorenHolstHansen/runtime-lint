@@ -8,9 +8,13 @@
 	},
 	"devDependencies": {
 		"@types/node": "^20.14.9",
-		"tsx": "^4.15.7"
+		"tsx": "^4.15.7",
+		"typescript": "^5.5.3"
 	},
-	"keywords": ["object", "statistics"],
+	"keywords": [
+		"object",
+		"statistics"
+	],
 	"type": "module",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",

@@ -5,10 +5,9 @@ import { networkJudge } from "../src/index.js";
 test("Detects duplicate responses with the same responses", async () => {
 	const onDuplicateResponseDetected = test.mock.fn();
 	networkJudge({
-		onDuplicateResponseDetected,
-		// Just to silence the console log
-		onQueriesInLoopsDetected: () => {},
-		onUnderuseOfResponseDetected: () => {},
+		duplicateResponses: {
+			cb: onDuplicateResponseDetected
+		}
 	});
 
 	const res1 = await fetch("https://jsonplaceholder.typicode.com/todos/1");
@@ -25,10 +24,9 @@ test("Detects duplicate responses with the same responses", async () => {
 test("Detects queries in loops", async () => {
 	const onQueriesInLoopsDetected = test.mock.fn();
 	networkJudge({
-		onQueriesInLoopsDetected,
-		// Just to silence the console log
-		onUnderuseOfResponseDetected: () => {},
-		onDuplicateResponseDetected: () => {},
+		queryInLoop: {
+			cb: onQueriesInLoopsDetected
+		}
 	});
 
 	await fetch("https://jsonplaceholder.typicode.com/todos/1");
@@ -46,9 +44,9 @@ test.todo("Debounces query in loop flagging", () => {});
 test("Detects simple overfetching of simple object (less than half of the keys have been used)", async () => {
 	const onUnderuseOfResponseDetected = test.mock.fn();
 	networkJudge({
-		onUnderuseOfResponseDetected,
-		onDuplicateResponseDetected: () => {},
-		onQueriesInLoopsDetected: () => {},
+		overFetching: {
+			cb: onUnderuseOfResponseDetected
+		},
 	});
 
 	const res = await fetch("https://jsonplaceholder.typicode.com/todos/5");
@@ -63,9 +61,9 @@ test("Detects simple overfetching of simple object (less than half of the keys h
 test("It doesn't flag overfetching if a lot of the fields are used", async () => {
 	const onUnderuseOfResponseDetected = test.mock.fn();
 	networkJudge({
-		onUnderuseOfResponseDetected,
-		onDuplicateResponseDetected: () => {},
-		onQueriesInLoopsDetected: () => {},
+		overFetching: {
+			cb: onUnderuseOfResponseDetected
+		},
 	});
 
 	const res = await fetch("https://jsonplaceholder.typicode.com/todos/6");
@@ -82,9 +80,9 @@ test("It doesn't flag overfetching if a lot of the fields are used", async () =>
 test("Detects simple overfetching of array (too many array elements are being fetched, only the first few have been used)", async () => {
 	const onUnderuseOfResponseDetected = test.mock.fn();
 	networkJudge({
-		onUnderuseOfResponseDetected,
-		onDuplicateResponseDetected: () => {},
-		onQueriesInLoopsDetected: () => {},
+		overFetching: {
+			cb: onUnderuseOfResponseDetected
+		}
 	});
 
 	const res = await fetch("https://jsonplaceholder.typicode.com/todos");
@@ -99,9 +97,9 @@ test("Detects simple overfetching of array (too many array elements are being fe
 test("It doesn't flag overfetching if a lot of the entries have been used", async () => {
 	const onUnderuseOfResponseDetected = test.mock.fn();
 	networkJudge({
-		onUnderuseOfResponseDetected,
-		onDuplicateResponseDetected: () => {},
-		onQueriesInLoopsDetected: () => {},
+		overFetching: {
+			cb: onUnderuseOfResponseDetected
+		},
 	});
 
 	const res = await fetch("https://jsonplaceholder.typicode.com/todos");

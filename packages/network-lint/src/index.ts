@@ -10,47 +10,55 @@ type StoreValue = {
 
 const store: Record<string, StoreValue> = {};
 
-type Config = {
+/** 
+ * A wrapper around a config that allows users to specify the config in a variety of ways
+ * e.g. 
+ * - "on" means use the default config
+ * - "off" | null | undefined means not to use the rule
+ * - Partial<T> allow users to specify parts of the config, and leave the rest of it as default
+ */
+type RuleConfig<T> = "on" | "off" | Partial<T> | null | undefined;
+
+function setConfig<T>(cfg: RuleConfig<T>, dflt: T): T | undefined {
+	if (cfg === "on") {
+		return dflt;
+	}
+	if (cfg == null || cfg === "off") {
+		return undefined;
+	}
+
+	return {...dflt, ...cfg}
+}
+
+type DuplicateResponseConfig = {
+	cb: (url: string) => void;
+}
+
+const DEFAULT_DUPLICATE_RESPONSE_CONFIG: DuplicateResponseConfig = {
 	/**
 	 * Callback to run when we detect multiple calls to the same endpoint with the exact same response. Defaults to a console.warn log
 	 */
-	onDuplicateResponseDetected?: (url: string) => void;
-	/**
-	 * Callback to run when we detect that queries might be running in a loop. Defaults to a console.warn log
-	 */
-	onQueriesInLoopsDetected?: (urls: string[]) => void;
-	/**
-	 * The amount of similar urls to see before calling the onQueriesInLoopsDetected. Default to 3
-	 */
-	queryInLoopThreshold?: number;
-	/**
-	 * Callback to run whenever we detect a json response has been very underused, which could suggest overfetching.
-	 */
-	onUnderuseOfResponseDetected?: (url: string) => void;
-};
-function networkJudge({
-	onDuplicateResponseDetected = (url) => {
+	cb: (url) => {
 		console.warn(
 			`You have previously made the same call (url: ${url}) that got the exact same response. Perhaps consider a (better) cache solution, or remove the duplicate calls.`,
 		);
-	},
-	onQueriesInLoopsDetected = (urls) => {
-		console.warn(
-			`It seems like you are fetching the same url, but with different id's, lots of times in a row. This might suggest you are fetching some resource in a loop e.g. fetching /todos/1, /todos/2, /todos/3 and so on. The URL's called are \n - ${urls.join("\n - ")}`,
-		);
-	},
-	queryInLoopThreshold = 3,
-	onUnderuseOfResponseDetected = (url) => {
-		console.warn(
-			`We detected a json response that was very under-utilized, this might suggest that you are overfetching your api. The url is ${url}`,
-		);
-	},
-}: Config) {
-	const options: Required<Config> = {
-		onDuplicateResponseDetected,
-		onQueriesInLoopsDetected,
-		queryInLoopThreshold,
-		onUnderuseOfResponseDetected,
+	}
+}
+
+type Config = {
+	duplicateResponses?: DuplicateResponseConfig;
+	queryInLoop?: QueryInLoopConfig;
+	overFetching?: OverFetchingConfig;
+};
+function networkJudge({
+	duplicateResponses,
+	queryInLoop,
+	overFetching
+}: { [Key in keyof Config]: RuleConfig<Config[Key]> }) {
+	const config: Config = {
+		duplicateResponses: setConfig(duplicateResponses, DEFAULT_DUPLICATE_RESPONSE_CONFIG),
+		queryInLoop: setConfig(queryInLoop, DEFAULT_QUERY_IN_LOOP_CONFIG),
+		overFetching: setConfig(overFetching, DEFAULT_OVERFETCHING_CONFIG)
 	};
 	const origFetch = fetch;
 
@@ -65,14 +73,16 @@ function networkJudge({
 					? input
 					: input.url;
 
-		detectQueriesInLoops(url, options);
+		if (config.queryInLoop) {
+			detectQueriesInLoops(url, config.queryInLoop);
+		}
 		store[url] = { ...store[url], lastCalledAt: new Date() };
 
 		res.json = new Proxy(res.json, {
 			async apply(target, thisArg, argumentsList) {
 				const res = await Reflect.apply(target, thisArg, argumentsList);
 				if (store[url] && deepEqual(store[url].jsonResponse, res)) {
-					options.onDuplicateResponseDetected(url);
+					config.duplicateResponses?.cb(url);
 				} else {
 					store[url] = {
 						// not strictly needed, but done to please ts
@@ -82,9 +92,11 @@ function networkJudge({
 					};
 				}
 
-				const resWithStats = detectUnderuseOfResponse(res, url, options);
-
-				return resWithStats;
+				if (config.overFetching) {
+					return detectUnderuseOfResponse(res, url, config.overFetching);
+				}
+				return res;
+					
 			},
 		});
 
@@ -92,11 +104,26 @@ function networkJudge({
 	};
 }
 
+type OverFetchingConfig = {
+	/**
+	 * Callback to run whenever we detect a json response has been very underused, which could suggest overfetching.
+	 */
+	cb: (url: string) => void;
+};
+
+const DEFAULT_OVERFETCHING_CONFIG: OverFetchingConfig = {
+	cb: (url) => {
+		console.warn(
+			`We detected a json response that was very under-utilized, this might suggest that you are overfetching your api. The url is ${url}`,
+		);
+	}
+}
+
 // biome-ignore lint/suspicious/noExplicitAny:
 function detectUnderuseOfResponse<T extends any[] | Record<string, any>>(
 	response: T,
 	url: string,
-	options: Required<Config>,
+	config: OverFetchingConfig,
 ): T {
 	const statObject = objectStats(response);
 
@@ -107,7 +134,7 @@ function detectUnderuseOfResponse<T extends any[] | Record<string, any>>(
 					(value) => value.count == null || value.count === 0,
 				).length;
 				if (arrayElemsUnused > response.length / 2) {
-					options.onUnderuseOfResponseDetected(url);
+					config.cb(url);
 				}
 			} else {
 				// Is a simple object. Only check top-level keys and check if under half of them have been used
@@ -116,7 +143,7 @@ function detectUnderuseOfResponse<T extends any[] | Record<string, any>>(
 					(value) => value.count == null || value.count === 0,
 				).length;
 				if (unaccessKeysCount > numToplevelKeys / 2) {
-					options.onUnderuseOfResponseDetected(url);
+					config.cb(url);
 				}
 			}
 			resolve(undefined);
@@ -126,9 +153,30 @@ function detectUnderuseOfResponse<T extends any[] | Record<string, any>>(
 	return statObject as T;
 }
 
+type QueryInLoopConfig = {
+	/**
+	 * Callback to run when we detect that queries might be running in a loop. Defaults to a console.warn log
+	 */
+	cb: (urls: string[]) => void;
+	/**
+	 * The amount of similar urls to see before calling the onQueriesInLoopsDetected. Default to 3
+	 */
+	threshold: number;
+};
+
+const DEFAULT_QUERY_IN_LOOP_CONFIG: QueryInLoopConfig = {
+	cb: (urls) => {
+		console.warn(
+			`It seems like you are fetching the same url, but with different id's, lots of times in a row. This might suggest you are fetching some resource in a loop e.g. fetching /todos/1, /todos/2, /todos/3 and so on. The URL's called are \n - ${urls.join("\n - ")}`,
+		);
+	},
+	threshold: 3,
+	
+}
+
 function detectQueriesInLoops(
 	currentUrl: string,
-	options: Required<Config>,
+	config: QueryInLoopConfig,
 ) {
 	const otherSimilarUrls: string[] = [];
 	const splitCurrentUrl = currentUrl.split("/");
@@ -142,8 +190,8 @@ function detectQueriesInLoops(
 
 	otherSimilarUrls.push(currentUrl);
 
-	if (otherSimilarUrls.length >= options.queryInLoopThreshold) {
-		options.onQueriesInLoopsDetected(otherSimilarUrls);
+	if (otherSimilarUrls.length >= config.threshold) {
+		config.cb(otherSimilarUrls);
 	}
 }
 
