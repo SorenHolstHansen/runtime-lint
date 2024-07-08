@@ -128,7 +128,6 @@ function detectUnderuseOfResponse<T extends any[] | Record<string, any>>(
 ): T {
 	const statObject = objectStats(response);
 
-	void new Promise((resolve) => {
 		setTimeout(() => {
 			if (Array.isArray(response)) {
 				const arrayElemsUnused = Object.values(statObject.__stats).filter(
@@ -147,9 +146,7 @@ function detectUnderuseOfResponse<T extends any[] | Record<string, any>>(
 					config.cb(url);
 				}
 			}
-			resolve(undefined);
 		}, 1000);
-	});
 
 	return statObject as T;
 }
