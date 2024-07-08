@@ -1,6 +1,6 @@
 import { objectStats } from "object-stats";
-import { urlsDifferOnlyInOneParam } from "./detectUrlsThatDifferOnlyByParams.js";
 import { deepEqual } from "./deepEqual.js";
+import { urlsDifferOnlyInOneParam } from "./detectUrlsThatDifferOnlyByParams.js";
 
 type StoreValue = {
 	lastCalledAt: Date;
@@ -10,9 +10,9 @@ type StoreValue = {
 
 const store: Record<string, StoreValue> = {};
 
-/** 
+/**
  * A wrapper around a config that allows users to specify the config in a variety of ways
- * e.g. 
+ * e.g.
  * - "on" means use the default config
  * - "off" | null | undefined means not to use the rule
  * - Partial<T> allow users to specify parts of the config, and leave the rest of it as default
@@ -27,12 +27,12 @@ function setConfig<T>(cfg: RuleConfig<T>, dflt: T): T | undefined {
 		return undefined;
 	}
 
-	return {...dflt, ...cfg}
+	return { ...dflt, ...cfg };
 }
 
 type DuplicateResponseConfig = {
 	cb: (url: string) => void;
-}
+};
 
 const DEFAULT_DUPLICATE_RESPONSE_CONFIG: DuplicateResponseConfig = {
 	/**
@@ -42,23 +42,26 @@ const DEFAULT_DUPLICATE_RESPONSE_CONFIG: DuplicateResponseConfig = {
 		console.warn(
 			`You have previously made the same call (url: ${url}) that got the exact same response. Perhaps consider a (better) cache solution, or remove the duplicate calls.`,
 		);
-	}
-}
+	},
+};
 
 type Config = {
 	duplicateResponses?: DuplicateResponseConfig;
 	queryInLoop?: QueryInLoopConfig;
 	overFetching?: OverFetchingConfig;
 };
-function networkJudge({
+function networkLint({
 	duplicateResponses,
 	queryInLoop,
-	overFetching
+	overFetching,
 }: { [Key in keyof Config]: RuleConfig<Config[Key]> }) {
 	const config: Config = {
-		duplicateResponses: setConfig(duplicateResponses, DEFAULT_DUPLICATE_RESPONSE_CONFIG),
+		duplicateResponses: setConfig(
+			duplicateResponses,
+			DEFAULT_DUPLICATE_RESPONSE_CONFIG,
+		),
 		queryInLoop: setConfig(queryInLoop, DEFAULT_QUERY_IN_LOOP_CONFIG),
-		overFetching: setConfig(overFetching, DEFAULT_OVERFETCHING_CONFIG)
+		overFetching: setConfig(overFetching, DEFAULT_OVERFETCHING_CONFIG),
 	};
 	const origFetch = fetch;
 
@@ -96,7 +99,6 @@ function networkJudge({
 					return detectUnderuseOfResponse(res, url, config.overFetching);
 				}
 				return res;
-					
 			},
 		});
 
@@ -116,8 +118,8 @@ const DEFAULT_OVERFETCHING_CONFIG: OverFetchingConfig = {
 		console.warn(
 			`We detected a json response that was very under-utilized, this might suggest that you are overfetching your api. The url is ${url}`,
 		);
-	}
-}
+	},
+};
 
 // biome-ignore lint/suspicious/noExplicitAny:
 function detectUnderuseOfResponse<T extends any[] | Record<string, any>>(
@@ -171,13 +173,9 @@ const DEFAULT_QUERY_IN_LOOP_CONFIG: QueryInLoopConfig = {
 		);
 	},
 	threshold: 3,
-	
-}
+};
 
-function detectQueriesInLoops(
-	currentUrl: string,
-	config: QueryInLoopConfig,
-) {
+function detectQueriesInLoops(currentUrl: string, config: QueryInLoopConfig) {
 	const otherSimilarUrls: string[] = [];
 	const splitCurrentUrl = currentUrl.split("/");
 	for (const [url, _value] of Object.entries(store)) {
@@ -195,4 +193,4 @@ function detectQueriesInLoops(
 	}
 }
 
-export { networkJudge };
+export { networkLint };
