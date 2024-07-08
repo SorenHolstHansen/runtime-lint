@@ -11,13 +11,12 @@ type StoreValue = {
 const store: Record<string, StoreValue> = {};
 
 /**
- * A wrapper around a config that allows users to specify the config in a variety of ways
- * e.g.
+ * A wrapper around a config that allows users to specify the config in a variety of ways e.g.
+ * - Partial<T> allow users to specify parts of the config, and leave the rest of it as default
  * - "on" means use the default config
  * - "off" | null | undefined means not to use the rule
- * - Partial<T> allow users to specify parts of the config, and leave the rest of it as default
  */
-type RuleConfig<T> = "on" | "off" | Partial<T> | null | undefined;
+type RuleConfig<T> = Partial<T> | "on" | "off" | null | undefined;
 
 function setConfig<T>(cfg: RuleConfig<T>, dflt: T): T | undefined {
 	if (cfg === "on") {
@@ -31,13 +30,13 @@ function setConfig<T>(cfg: RuleConfig<T>, dflt: T): T | undefined {
 }
 
 type DuplicateResponseConfig = {
+	/**
+	 * Callback to run when we detect multiple calls to the same endpoint with the exact same response. Defaults to a console.warn log
+	 */
 	cb: (url: string) => void;
 };
 
 const DEFAULT_DUPLICATE_RESPONSE_CONFIG: DuplicateResponseConfig = {
-	/**
-	 * Callback to run when we detect multiple calls to the same endpoint with the exact same response. Defaults to a console.warn log
-	 */
 	cb: (url) => {
 		console.warn(
 			`You have previously made the same call (url: ${url}) that got the exact same response. Perhaps consider a (better) cache solution, or remove the duplicate calls.`,
