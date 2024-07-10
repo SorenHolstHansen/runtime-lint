@@ -1,7 +1,7 @@
 {
-	"name": "network-lint",
+	"name": "runtime-lint",
 	"version": "0.0.1",
-	"description": "A runtime linter for your network calls.",
+	"description": "A runtime linter for your js application.",
 	"scripts": {
 		"start-api": "node test/api/api.js",
 		"test": "node --import tsx --test test/**/*.test.ts",
@@ -15,8 +15,7 @@
 		"tsx": "^4.15.7"
 	},
 	"keywords": [
-		"fetch",
-		"network"
+		"lint"
 	],
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
