@@ -3,8 +3,9 @@
 	"version": "0.0.1",
 	"description": "A runtime linter for your network calls.",
 	"scripts": {
-		"start-api": "node test/api/api.js",
-		"test": "node --import tsx --test test/**/*.test.ts",
+		"start-api": "pm2 start test/api/api.js",
+		"stop-api": "pm2 delete test/api/api.js",
+		"test": "npm run start-api && sleep 1 && node --import tsx --test test/**/*.test.ts && npm run stop-api",
 		"build": "tsc"
 	},
 	"dependencies": {
@@ -12,12 +13,11 @@
 	},
 	"devDependencies": {
 		"@types/node": "^20.14.9",
+		"express": "^4.19.2",
+		"pm2": "^5.4.2",
 		"tsx": "^4.15.7"
 	},
-	"keywords": [
-		"fetch",
-		"network"
-	],
+	"keywords": ["fetch", "network"],
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"type": "module",

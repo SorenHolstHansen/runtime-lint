@@ -17,5 +17,14 @@ jobs:
           version: 1.8.1
       - name: Run Biome
         run: biome ci --reporter=github --diagnostic-level=error --error-on-warnings .
+
+  testing:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
       - name: test
         run: npm run test
