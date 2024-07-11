@@ -8,9 +8,6 @@
 		"test": "npm run start-api && sleep 1 && node --import tsx --test test/**/*.test.ts && npm run stop-api",
 		"build": "tsc"
 	},
-	"dependencies": {
-		"object-stats": "*"
-	},
 	"devDependencies": {
 		"@types/node": "^20.14.9",
 		"express": "^4.19.2",

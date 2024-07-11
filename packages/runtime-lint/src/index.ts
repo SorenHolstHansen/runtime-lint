@@ -1,4 +1,4 @@
-import { objectStats } from "object-stats";
+import { objectStats } from "./object-stats.js";
 import { deepEqual } from "./deepEqual.js";
 import { urlsDifferOnlyInOneParam } from "./detectUrlsThatDifferOnlyByParams.js";
 
