@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { networkLint } from "../src/index.js";
+import { runtimeLint } from "../src/index.js";
 
 test("Detects duplicate responses with the same responses", async () => {
 	const onDuplicateResponseDetected = test.mock.fn();
-	networkLint({
+	runtimeLint({
 		duplicateResponses: {
 			cb: onDuplicateResponseDetected,
 		},
@@ -23,7 +23,7 @@ test("Detects duplicate responses with the same responses", async () => {
 
 test("Detects queries in loops", async () => {
 	const onQueriesInLoopsDetected = test.mock.fn();
-	networkLint({
+	runtimeLint({
 		queryInLoop: {
 			cb: onQueriesInLoopsDetected,
 		},
@@ -43,7 +43,7 @@ test.todo(
 test.todo("Debounces query in loop flagging", () => {});
 test("Detects simple overfetching of simple object (less than half of the keys have been used)", async () => {
 	const onUnderuseOfResponseDetected = test.mock.fn();
-	networkLint({
+	runtimeLint({
 		overFetching: {
 			cb: onUnderuseOfResponseDetected,
 		},
@@ -60,7 +60,7 @@ test("Detects simple overfetching of simple object (less than half of the keys h
 
 test("It doesn't flag overfetching if a lot of the fields are used", async () => {
 	const onUnderuseOfResponseDetected = test.mock.fn();
-	networkLint({
+	runtimeLint({
 		overFetching: {
 			cb: onUnderuseOfResponseDetected,
 		},
@@ -79,7 +79,7 @@ test("It doesn't flag overfetching if a lot of the fields are used", async () =>
 
 test("Detects simple overfetching of array (too many array elements are being fetched, only the first few have been used)", async () => {
 	const onUnderuseOfResponseDetected = test.mock.fn();
-	networkLint({
+	runtimeLint({
 		overFetching: {
 			cb: onUnderuseOfResponseDetected,
 		},
@@ -96,7 +96,7 @@ test("Detects simple overfetching of array (too many array elements are being fe
 
 test("It doesn't flag overfetching if a lot of the entries have been used", async () => {
 	const onUnderuseOfResponseDetected = test.mock.fn();
-	networkLint({
+	runtimeLint({
 		overFetching: {
 			cb: onUnderuseOfResponseDetected,
 		},

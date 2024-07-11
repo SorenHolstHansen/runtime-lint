@@ -1,7 +1,7 @@
 {
-	"name": "network-lint",
+	"name": "runtime-lint",
 	"version": "0.0.1",
-	"description": "A runtime linter for your network calls.",
+	"description": "A runtime linter for your js application.",
 	"scripts": {
 		"start-api": "pm2 start test/api/api.js",
 		"stop-api": "pm2 delete test/api/api.js",
@@ -17,7 +17,9 @@
 		"pm2": "^5.4.2",
 		"tsx": "^4.15.7"
 	},
-	"keywords": ["fetch", "network"],
+	"keywords": [
+		"lint"
+	],
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"type": "module",

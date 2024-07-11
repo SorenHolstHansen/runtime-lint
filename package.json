@@ -1,21 +1,18 @@
 {
-	"name": "network-lint-monorepo",
+	"name": "runtime-lint-monorepo",
 	"version": "0.0.1",
-	"description": "Monorepo for network-lint and related projects",
+	"description": "Monorepo for runtime-lint and related projects",
 	"private": true,
-	"workspaces": [
-		"packages/*",
-		"examples/*"
-	],
+	"workspaces": ["packages/*", "examples/*"],
 	"license": "MIT",
 	"packageManager": "npm@10.2.0",
 	"scripts": {
 		"lint": "npx @biomejs/biome check --write .",
-		"test": "npm --prefix packages/network-lint run start-api && sleep 1 && node --import tsx --test **/test/**/*.test.ts"
+		"test": "npm --prefix packages/runtime-lint run start-api && sleep 1 && node --import tsx --test **/test/**/*.test.ts"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/SorenHolstHansen/network-lint.git"
+		"url": "git+https://github.com/SorenHolstHansen/runtime-lint.git"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.8.1"

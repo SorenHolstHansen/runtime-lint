@@ -49,7 +49,7 @@ type Config = {
 	queryInLoop?: QueryInLoopConfig;
 	overFetching?: OverFetchingConfig;
 };
-function networkLint({
+function runtimeLint({
 	duplicateResponses,
 	queryInLoop,
 	overFetching,
@@ -189,4 +189,4 @@ function detectQueriesInLoops(currentUrl: string, config: QueryInLoopConfig) {
 	}
 }
 
-export { networkLint };
+export { runtimeLint };
