@@ -1,6 +1,10 @@
-import { objectStats } from "./object-stats.js";
-import { deepEqual } from "./deepEqual.js";
-import { DEFAULT_QUERY_IN_LOOP_CONFIG, detectQueriesInLoops, type QueryInLoopConfig } from "./queriesInLoops.js";
+import {
+	DEFAULT_QUERY_IN_LOOP_CONFIG,
+	type QueryInLoopConfig,
+	detectQueriesInLoops,
+} from "./rules/queriesInLoops/queriesInLoops.js";
+import { deepEqual } from "./utils/deepEqual.js";
+import { objectStats } from "./utils/object-stats.js";
 
 type StoreValue = {
 	lastCalledAt: Date;
@@ -128,25 +132,25 @@ function detectUnderuseOfResponse<T extends any[] | Record<string, any>>(
 ): T {
 	const statObject = objectStats(response);
 
-		setTimeout(() => {
-			if (Array.isArray(response)) {
-				const arrayElemsUnused = Object.values(statObject.__stats).filter(
-					(value) => value.count == null || value.count === 0,
-				).length;
-				if (arrayElemsUnused > response.length / 2) {
-					config.cb(url);
-				}
-			} else {
-				// Is a simple object. Only check top-level keys and check if under half of them have been used
-				const numToplevelKeys = Object.keys(statObject).length;
-				const unaccessKeysCount = Object.values(statObject.__stats).filter(
-					(value) => value.count == null || value.count === 0,
-				).length;
-				if (unaccessKeysCount > numToplevelKeys / 2) {
-					config.cb(url);
-				}
+	setTimeout(() => {
+		if (Array.isArray(response)) {
+			const arrayElemsUnused = Object.values(statObject.__stats).filter(
+				(value) => value.count == null || value.count === 0,
+			).length;
+			if (arrayElemsUnused > response.length / 2) {
+				config.cb(url);
 			}
-		}, 1000);
+		} else {
+			// Is a simple object. Only check top-level keys and check if under half of them have been used
+			const numToplevelKeys = Object.keys(statObject).length;
+			const unaccessKeysCount = Object.values(statObject.__stats).filter(
+				(value) => value.count == null || value.count === 0,
+			).length;
+			if (unaccessKeysCount > numToplevelKeys / 2) {
+				config.cb(url);
+			}
+		}
+	}, 1000);
 
 	return statObject as T;
 }

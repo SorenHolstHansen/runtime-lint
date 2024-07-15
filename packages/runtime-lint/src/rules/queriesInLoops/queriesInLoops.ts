@@ -22,13 +22,16 @@ export const DEFAULT_QUERY_IN_LOOP_CONFIG: QueryInLoopConfig = {
 		);
 	},
 	threshold: 3,
-	debounceMs: 500
+	debounceMs: 500,
 };
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 const store: Record<string, any> = {};
 
-export function detectQueriesInLoops(currentUrl: string, config: QueryInLoopConfig) {
+export function detectQueriesInLoops(
+	currentUrl: string,
+	config: QueryInLoopConfig,
+) {
 	store[currentUrl] = { ...store[currentUrl], lastCalledAt: new Date() };
 	const otherSimilarUrls: string[] = [];
 	const splitCurrentUrl = currentUrl.split("/");
