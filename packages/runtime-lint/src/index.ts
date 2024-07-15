@@ -1,6 +1,6 @@
 import { objectStats } from "./object-stats.js";
 import { deepEqual } from "./deepEqual.js";
-import { urlsDifferOnlyInOneParam } from "./detectUrlsThatDifferOnlyByParams.js";
+import { DEFAULT_QUERY_IN_LOOP_CONFIG, detectQueriesInLoops, type QueryInLoopConfig } from "./queriesInLoops.js";
 
 type StoreValue = {
 	lastCalledAt: Date;
@@ -149,44 +149,6 @@ function detectUnderuseOfResponse<T extends any[] | Record<string, any>>(
 		}, 1000);
 
 	return statObject as T;
-}
-
-type QueryInLoopConfig = {
-	/**
-	 * Callback to run when we detect that queries might be running in a loop. Defaults to a console.warn log
-	 */
-	cb: (urls: string[]) => void;
-	/**
-	 * The amount of similar urls to see before calling the onQueriesInLoopsDetected. Default to 3
-	 */
-	threshold: number;
-};
-
-const DEFAULT_QUERY_IN_LOOP_CONFIG: QueryInLoopConfig = {
-	cb: (urls) => {
-		console.warn(
-			`It seems like you are fetching the same url, but with different id's, lots of times in a row. This might suggest you are fetching some resource in a loop e.g. fetching /todos/1, /todos/2, /todos/3 and so on. The URL's called are \n - ${urls.join("\n - ")}`,
-		);
-	},
-	threshold: 3,
-};
-
-function detectQueriesInLoops(currentUrl: string, config: QueryInLoopConfig) {
-	const otherSimilarUrls: string[] = [];
-	const splitCurrentUrl = currentUrl.split("/");
-	for (const [url, _value] of Object.entries(store)) {
-		if (url === currentUrl) continue;
-		const splitUrl = url.split("/");
-		if (urlsDifferOnlyInOneParam(splitCurrentUrl, splitUrl)) {
-			otherSimilarUrls.push(url);
-		}
-	}
-
-	otherSimilarUrls.push(currentUrl);
-
-	if (otherSimilarUrls.length >= config.threshold) {
-		config.cb(otherSimilarUrls);
-	}
 }
 
 export { runtimeLint };
