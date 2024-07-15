@@ -1,4 +1,4 @@
-import { urlsDifferOnlyInOneParam } from "./detectUrlsThatDifferOnlyByParams.js";
+import { urlsDifferOnlyInOneParam } from "../../utils/detectUrlsThatDifferOnlyByParams.js";
 
 export type QueryInLoopConfig = {
 	/**

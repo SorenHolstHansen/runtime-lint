@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { runtimeLint } from "../src/index.js";
+import { runtimeLint } from "../index.js";
 
 test("Detects duplicate responses with the same responses", async () => {
 	const onDuplicateResponseDetected = test.mock.fn();

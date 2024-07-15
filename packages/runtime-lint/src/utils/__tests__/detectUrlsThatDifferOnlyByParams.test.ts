@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { urlsDifferOnlyInOneParam } from "../src/detectUrlsThatDifferOnlyByParams";
+import { urlsDifferOnlyInOneParam } from "../detectUrlsThatDifferOnlyByParams.js";
 
 test("Detects similar urls, where only the last url part differ, and they are numbers", () => {
 	assert(

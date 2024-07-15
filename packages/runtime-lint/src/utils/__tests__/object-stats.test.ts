@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { objectStats } from "../src/object-stats";
+import { objectStats } from "../object-stats.js";
 
 test("Simple index test", () => {
 	const a = objectStats({
