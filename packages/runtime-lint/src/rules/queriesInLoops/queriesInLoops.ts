@@ -34,7 +34,7 @@ const store: Record<string, any> = {};
 export function detectQueriesInLoops(url: string, config: QueryInLoopConfig) {
 	let hasBeenInAFamily = false;
 	for (const family of urlFamilies) {
-		if (family.entries.some(u => u === url)) {
+		if (family.entries.includes(url)) {
 			hasBeenInAFamily = true;
 		} else if (urlIsInFamily(url, family.entries)) {
 			hasBeenInAFamily = true;
