@@ -4,7 +4,7 @@ import {
 	detectQueriesInLoops,
 } from "./rules/queriesInLoops/queriesInLoops.js";
 import { deepEqual } from "./utils/deepEqual.js";
-import { objectStats } from "./utils/object-stats.js";
+import { objectStats } from "./utils/objectStats.js";
 
 type StoreValue = {
 	lastCalledAt: Date;

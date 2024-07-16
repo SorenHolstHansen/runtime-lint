@@ -1,4 +1,5 @@
 import { urlsDifferOnlyInOneParam } from "../../utils/detectUrlsThatDifferOnlyByParams.js";
+import { Loader } from "../../utils/loader.js";
 
 export type QueryInLoopConfig = {
 	/**
@@ -25,10 +26,37 @@ export const DEFAULT_QUERY_IN_LOOP_CONFIG: QueryInLoopConfig = {
 	debounceMs: 500,
 };
 
+const urlFamilies: Loader</* url */ string>[] = [];
+
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 const store: Record<string, any> = {};
 
-export function detectQueriesInLoops(
+export function detectQueriesInLoops(url: string, config: QueryInLoopConfig) {
+	let hasBeenInAFamily = false;
+	for (const family of urlFamilies) {
+		if (family.entries.some(u => u === url)) {
+			hasBeenInAFamily = true;
+		} else if (urlIsInFamily(url, family.entries)) {
+			hasBeenInAFamily = true;
+			family.load(url);
+		}
+	}
+
+	if (!hasBeenInAFamily) {
+		urlFamilies.push(
+			new Loader(
+				config.debounceMs,
+				(entries) => entries.length >= config.threshold && config.cb(entries),
+			),
+		);
+	}
+}
+
+function urlIsInFamily(url: string, family: string[]): boolean {
+	return family.every((u) => urlsDifferOnlyInOneParam(u.split("/"), url.split("/")));
+}
+
+export function detectQueriesInLoopsOld(
 	currentUrl: string,
 	config: QueryInLoopConfig,
 ) {

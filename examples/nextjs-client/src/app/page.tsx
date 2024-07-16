@@ -19,7 +19,7 @@ async function getPosts(): Promise<Post[]> {
 export default function Home() {
   runtimeLint({
     queryInLoop: {
-      cb: (url) => alert("OH NO")
+      cb: (urls) => alert(`OH NO! It looks like you are calling ${urls.length} queries in a loop:\n${urls.join("\n")}`)
     }
   })
 

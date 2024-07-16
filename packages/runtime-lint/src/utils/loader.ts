@@ -1,10 +1,10 @@
 // A batch loader using a dataloader pattern
-class Loader<T> {
+export class Loader<T> {
 	constructor(
 		private debounceMs: number,
 		private batchLoaderCb: (entries: T[]) => void,
 		private batchLoaderHasBeenCalled = false,
-		private entries: T[] = [],
+		public entries: T[] = [],
 	) {}
 
 	load(entry: T) {
