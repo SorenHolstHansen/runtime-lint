@@ -19,6 +19,7 @@
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"type": "module",
+	"include": ["dist", "README.md"],
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
