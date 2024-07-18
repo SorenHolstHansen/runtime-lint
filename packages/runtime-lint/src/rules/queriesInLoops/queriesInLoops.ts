@@ -53,7 +53,9 @@ export function detectQueriesInLoops(url: string, config: QueryInLoopConfig) {
 }
 
 function urlIsInFamily(url: string, family: string[]): boolean {
-	return family.every((u) => urlsDifferOnlyInOneParam(u.split("/"), url.split("/")));
+	return family.every((u) =>
+		urlsDifferOnlyInOneParam(u.split("/"), url.split("/")),
+	);
 }
 
 export function detectQueriesInLoopsOld(
