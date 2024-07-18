@@ -1,6 +1,6 @@
 {
 	"name": "runtime-lint",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "A runtime \"linter\" for your js application.",
 	"scripts": {
 		"start-api": "pm2 start test-api/api.js",
