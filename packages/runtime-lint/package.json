@@ -1,7 +1,7 @@
 {
 	"name": "runtime-lint",
-	"version": "0.0.1",
-	"description": "A runtime linter for your js application.",
+	"version": "0.0.2",
+	"description": "A runtime \"linter\" for your js application.",
 	"scripts": {
 		"start-api": "pm2 start test-api/api.js",
 		"stop-api": "pm2 delete test-api/api.js",
@@ -20,6 +20,14 @@
 	"types": "dist/index.d.ts",
 	"type": "module",
 	"include": ["dist", "README.md"],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/SorenHolstHansen/runtime-lint.git",
+		"directory": "packages/runtime-lint"
+	},
+	"bugs": {
+		"url": "git+https://github.com/SorenHolstHansen/runtime-lint/issues"
+	},
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
