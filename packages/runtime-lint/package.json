@@ -5,7 +5,7 @@
 	"scripts": {
 		"start-api": "pm2 start test-api/api.js",
 		"stop-api": "pm2 delete test-api/api.js",
-		"test": "npm run start-api && sleep 1 && node --import tsx --test src/**/__tests__/*.test.ts && npm run stop-api",
+		"test": "npm run start-api && sleep 1 && node --import tsx --test \"src/**/*.test.ts\" && npm run stop-api",
 		"build": "tsc",
 		"build:watch": "tsc -w"
 	},

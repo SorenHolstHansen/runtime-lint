@@ -53,9 +53,34 @@ runtimeLint({
 
 The overFetching rules tries to detect when json responses from a fetch call has been under-utilized. This could suggest over fetching. At the moment, the rule reports underuse if less than half the top-level keys of a response has been used.
 
-| field | type                    | description                                                                                                                                     |
-| ----- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| cb    | `(url: string) => void` | Callback to run whenever we detect a json response has been underused, which could suggest overfetching. The url called is given as a parameter |
+| field     | type                                                                                                      | description                                                                                                                                                                                                                                                     |
+| --------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| cb        | `(url: string) => void`                                                                                   | Callback to run whenever we detect a json response has been underused, which could suggest overfetching. The url called is given as a parameter                                                                                                                 |
+| heuristic | `<T extends any[] \| Record<string, any>>(response: T, responseWithStats: ObjectWithStats<T>) => boolean` | Heuristic to apply to a json response after a certain time to determine if it has been underused or not. It is given the original response, and the response with stats about how much its fields has been accessed (see below). Return true if it is underused |
+
+* `ObjectWithStats<T>` is a wrapper around an object that on each field gives the count of how many times it has been accessed, plus an `inner` field that enabled you to traverse the object.
+
+Say, for the object
+```js
+let a = {
+  foo: {
+    bar: "baz"
+  }
+}
+```
+Then an object of type `ObjectWithStats<typeof a>` will look like this
+```js
+{
+  foo: {
+    count: 2,
+    inner: {
+      bar: {
+        count: 1
+      }
+    }
+  }
+}
+```
 
 ### queryInLoop
 
