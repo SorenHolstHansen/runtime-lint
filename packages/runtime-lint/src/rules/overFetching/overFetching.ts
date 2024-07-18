@@ -13,6 +13,11 @@ export type OverFetchingConfig = {
 		response: T,
 		responseWithStats: ObjectWithStats<T>,
 	) => boolean;
+	/**
+	 * Wait for some milliseconds before detecting overFetching for a response.
+	 * If this is 0, basically everything will be detected as being overFetched, since then nothing would have been used. Default to 1000
+	 */
+	msTillCheck: number;
 };
 
 export const DEFAULT_OVERFETCHING_CONFIG: OverFetchingConfig = {
@@ -42,6 +47,7 @@ export const DEFAULT_OVERFETCHING_CONFIG: OverFetchingConfig = {
 
 		return false;
 	},
+	msTillCheck: 1000,
 };
 
 // biome-ignore lint/suspicious/noExplicitAny:
@@ -56,7 +62,7 @@ export function detectOverfetching<T extends any[] | Record<string, any>>(
 		if (config.heuristic(response, statObject)) {
 			config.cb(url);
 		}
-	}, 1000);
+	}, config.msTillCheck);
 
 	return statObject as T;
 }
