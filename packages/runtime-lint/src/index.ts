@@ -90,7 +90,11 @@ function runtimeLint({
 
 		res.json = new Proxy(res.json, {
 			async apply(target, thisArg, argumentsList) {
-				const res = await Reflect.apply(target, thisArg, argumentsList);
+				const res: unknown = await Reflect.apply(
+					target,
+					thisArg,
+					argumentsList,
+				);
 				if (store[url] && deepEqual(store[url].jsonResponse, res)) {
 					config.duplicateResponses?.cb(url);
 				} else {
@@ -102,7 +106,7 @@ function runtimeLint({
 					};
 				}
 
-				if (config.overFetching) {
+				if (config.overFetching && typeof res === "object" && res != null) {
 					return detectOverfetching(res, url, config.overFetching);
 				}
 				return res;
