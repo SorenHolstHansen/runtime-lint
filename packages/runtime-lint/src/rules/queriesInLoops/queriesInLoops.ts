@@ -28,9 +28,6 @@ export const DEFAULT_QUERY_IN_LOOP_CONFIG: QueryInLoopConfig = {
 
 const urlFamilies: Loader</* url */ string>[] = [];
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-const store: Record<string, any> = {};
-
 export function detectQueriesInLoops(url: string, config: QueryInLoopConfig) {
 	let hasBeenInAFamily = false;
 	for (const family of urlFamilies) {
@@ -56,26 +53,4 @@ function urlIsInFamily(url: string, family: string[]): boolean {
 	return family.every((u) =>
 		urlsDifferOnlyInOneParam(u.split("/"), url.split("/")),
 	);
-}
-
-export function detectQueriesInLoopsOld(
-	currentUrl: string,
-	config: QueryInLoopConfig,
-) {
-	store[currentUrl] = { ...store[currentUrl], lastCalledAt: new Date() };
-	const otherSimilarUrls: string[] = [];
-	const splitCurrentUrl = currentUrl.split("/");
-	for (const [url, _value] of Object.entries(store)) {
-		if (url === currentUrl) continue;
-		const splitUrl = url.split("/");
-		if (urlsDifferOnlyInOneParam(splitCurrentUrl, splitUrl)) {
-			otherSimilarUrls.push(url);
-		}
-	}
-
-	otherSimilarUrls.push(currentUrl);
-
-	if (otherSimilarUrls.length >= config.threshold) {
-		config.cb(otherSimilarUrls);
-	}
 }
