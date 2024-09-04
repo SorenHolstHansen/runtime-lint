@@ -55,6 +55,10 @@ const DEFAULT_DUPLICATE_RESPONSE_CONFIG: DuplicateResponseConfig = {
 type Config = {
 	duplicateResponses?: DuplicateResponseConfig;
 	queryInLoop?: QueryInLoopConfig;
+	/**
+	 * Detect overfetching of request (that is, underuse of json responses).
+	 * This is currently not supported for non-fetch uses (i.e. XMLHttpRequest, Axios, ...)
+	 */
 	overFetching?: OverFetchingConfig;
 };
 function runtimeLint({
