@@ -13,7 +13,7 @@ import { deepEqual } from "./utils/deepEqual.js";
 type StoreValue = {
 	lastCalledAt: Date;
 	// biome-ignore lint/suspicious/noExplicitAny: Don't really care about the type here
-	jsonResponse?: any;
+	response?: any;
 };
 
 const store: Record<string, StoreValue> = {};
@@ -95,14 +95,14 @@ function runtimeLint({
 					thisArg,
 					argumentsList,
 				);
-				if (store[url] && deepEqual(store[url].jsonResponse, res)) {
+				if (store[url] && deepEqual(store[url].response, res)) {
 					config.duplicateResponses?.cb(url);
 				} else {
 					store[url] = {
 						// not strictly needed, but done to please ts
 						lastCalledAt: new Date(),
 						...store[url],
-						jsonResponse: res,
+						response: res,
 					};
 				}
 
@@ -114,6 +114,45 @@ function runtimeLint({
 		});
 
 		return res;
+	};
+
+	const origXHROpen = XMLHttpRequest.prototype.open;
+	// @ts-ignore
+	XMLHttpRequest.prototype.open = function (
+		_method,
+		_url,
+		_async,
+		_user,
+		_password,
+	) {
+		const url = _url instanceof URL ? _url.toString() : _url;
+		if (config.queryInLoop) {
+			detectQueriesInLoops(url, config.queryInLoop);
+		}
+		this.addEventListener("load", function () {
+			const responseText = this.responseText;
+			// TODO: the response text might not be equal for identical requests, because objects might not be sorted in the same way.
+			// However for now we just do like this
+			if (store[url] && store[url].response === responseText) {
+				config.duplicateResponses?.cb(url);
+			} else {
+				store[url] = {
+					lastCalledAt: new Date(),
+					...store[url],
+					response: responseText,
+				};
+			}
+
+			// Can't detect overfetching here, since there is no .json (or similar) functionality on XMLHttpRequest's
+			// TODO: Add axios as an "adaptor".
+		});
+
+		return origXHROpen.apply(
+			this,
+			// biome-ignore lint/style/noArguments:
+			// biome-ignore lint/suspicious/noExplicitAny:
+			arguments as any,
+		);
 	};
 }
 
