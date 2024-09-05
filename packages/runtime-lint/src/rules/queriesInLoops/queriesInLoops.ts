@@ -1,4 +1,4 @@
-import { urlsDifferOnlyInOneParam } from "../../utils/detectUrlsThatDifferOnlyByParams.js";
+import { detectUrlFamilies, urls } from "../../utils/detectUrlFamilies.js";
 import { Loader } from "../../utils/loader.js";
 
 export type QueryInLoopConfig = {
@@ -26,31 +26,25 @@ export const DEFAULT_QUERY_IN_LOOP_CONFIG: QueryInLoopConfig = {
 	debounceMs: 500,
 };
 
-const urlFamilies: Loader</* url */ string>[] = [];
+const urlFamilies: Record<string, Loader</* url */ string>> = {};
 
 export function detectQueriesInLoops(url: string, config: QueryInLoopConfig) {
-	let hasBeenInAFamily = false;
-	for (const family of urlFamilies) {
-		if (family.entries.includes(url)) {
-			hasBeenInAFamily = true;
-		} else if (urlIsInFamily(url, family.entries)) {
-			hasBeenInAFamily = true;
-			family.load(url);
+	const families = detectUrlFamilies(url);
+	for (const family of families) {
+		if (urlFamilies[family] == null) {
+			const loader = new Loader<string>(config.debounceMs, (entries) => {
+				if (entries.length + 1 >= config.threshold) {
+					config.cb(entries);
+					for (const entry of entries) {
+						urls.delete(new URL(entry));
+					}
+					delete urlFamilies[family];
+				}
+			});
+			loader.load(url);
+			urlFamilies[family] = loader;
+		} else {
+			urlFamilies[family].load(url);
 		}
 	}
-
-	if (!hasBeenInAFamily) {
-		const loader = new Loader<string>(
-			config.debounceMs,
-			(entries) => entries.length >= config.threshold && config.cb(entries),
-		);
-		loader.load(url);
-		urlFamilies.push(loader);
-	}
-}
-
-function urlIsInFamily(url: string, family: string[]): boolean {
-	return family.every((u) =>
-		urlsDifferOnlyInOneParam(u.split("/"), url.split("/")),
-	);
 }
