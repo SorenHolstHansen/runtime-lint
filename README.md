@@ -53,6 +53,8 @@ runtimeLint({
 
 The overFetching rules tries to detect when json responses from a fetch call has been under-utilized. This could suggest over fetching. At the moment, the rule reports underuse if less than half the top-level keys of a response has been used.
 
+This is currently only supported for fetch-implementations. i.e. not XMLHttpRequest, and hence axios.
+
 | field       | type                                                                                                      | description                                                                                                                                                                                                                                                     |
 | ----------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | cb          | `(url: string) => void`                                                                                   | Callback to run whenever we detect a json response has been underused, which could suggest overfetching. The url called is given as a parameter                                                                                                                 |
