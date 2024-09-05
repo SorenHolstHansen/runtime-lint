@@ -50,7 +50,7 @@ test("Urls that differ only one place, and where the ids are uuid are flagged", 
 	);
 });
 
-test.skip("Urls that have different base url is not flagged", () => {
+test("Urls that have different base url is not flagged", () => {
 	testUrlFamily(
 		"https://www.example.com/todos/1",
 		"https://jsonplaceholder2.typicode.com/todos/1",
