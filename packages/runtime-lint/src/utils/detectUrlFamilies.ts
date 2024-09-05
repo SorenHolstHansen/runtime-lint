@@ -17,8 +17,8 @@ export function detectUrlFamilies(_url: string): string[] {
 export function detectUrlFamily(url1: URL, url2: URL): string | undefined {
 	if (url1.href === url2.href) return;
 	if (url1.origin !== url2.origin) return;
-	const urlSplit = url2.href.split("/");
-	const uSplit = url1.href.split("/");
+	const urlSplit = url2.pathname.split("/");
+	const uSplit = url1.pathname.split("/");
 	if (uSplit.length !== urlSplit.length) return;
 
 	const differencesAt = [];
@@ -40,7 +40,7 @@ export function detectUrlFamily(url1: URL, url2: URL): string | undefined {
 		const family = uSplit
 			.map((part, i) => (i === differenceAt ? "{PARAM}" : part))
 			.join("/");
-		return family;
+		return `${url1.origin}${family}`;
 	}
 
 	return;
