@@ -56,3 +56,20 @@ test("It doesn't flag overfetching if a lot of the entries have been used for th
 		assert(onUnderuseOfResponseDetected.mock.callCount() === 0);
 	}, 1500);
 });
+
+test("Detects simple overfetching of simple object (less than half of the keys have been used)", async () => {
+	const onUnderuseOfResponseDetected = test.mock.fn();
+	runtimeLint({
+		overFetching: {
+			cb: onUnderuseOfResponseDetected,
+		},
+	});
+
+	const res = await fetch("http://localhost:3000/todos/5");
+	const resJson = await res.json();
+	resJson.id;
+
+	setTimeout(() => {
+		assert(onUnderuseOfResponseDetected.mock.callCount() > 0);
+	}, 1500);
+});
