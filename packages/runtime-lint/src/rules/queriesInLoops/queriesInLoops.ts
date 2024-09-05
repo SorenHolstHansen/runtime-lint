@@ -40,12 +40,12 @@ export function detectQueriesInLoops(url: string, config: QueryInLoopConfig) {
 	}
 
 	if (!hasBeenInAFamily) {
-		urlFamilies.push(
-			new Loader(
-				config.debounceMs,
-				(entries) => entries.length >= config.threshold && config.cb(entries),
-			),
+		const loader = new Loader<string>(
+			config.debounceMs,
+			(entries) => entries.length >= config.threshold && config.cb(entries),
 		);
+		loader.load(url);
+		urlFamilies.push(loader);
 	}
 }
 
