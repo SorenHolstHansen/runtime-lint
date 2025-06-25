@@ -1,38 +1,38 @@
 {
-	"name": "runtime-lint",
-	"version": "0.1.0",
-	"description": "A runtime \"linter\" for your js application.",
-	"scripts": {
-		"start-api": "pm2 start test-api/api.js",
-		"stop-api": "pm2 delete test-api/api.js",
-		"test": "npm run start-api && sleep 1 && node --import tsx --test \"src/**/*.test.ts\" && npm run stop-api",
-		"build": "tsc",
-		"build:watch": "tsc -w"
-	},
-	"devDependencies": {
-		"@types/node": "^20.14.9",
-		"express": "^4.19.2",
-		"tsx": "^4.15.7"
-	},
-	"keywords": ["lint"],
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
-	"type": "module",
-	"include": ["dist", "README.md"],
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/SorenHolstHansen/runtime-lint.git",
-		"directory": "packages/runtime-lint"
-	},
-	"bugs": {
-		"url": "git+https://github.com/SorenHolstHansen/runtime-lint/issues"
-	},
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"default": "./dist/index.js"
-		},
-		"./package.json": "./package.json"
-	},
-	"license": "MIT"
+  "name": "runtime-lint",
+  "version": "0.1.0",
+  "description": "A runtime \"linter\" for your js application.",
+  "scripts": {
+    "start-api": "pm2 start test-api/api.js",
+    "stop-api": "pm2 delete test-api/api.js",
+    "test": "npm run start-api && sleep 1 && node --import tsx --test \"src/**/*.test.ts\" && npm run stop-api",
+    "build": "tsc",
+    "build:watch": "tsc -w"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "express": "^4.19.2",
+    "tsx": "^4.15.7"
+  },
+  "keywords": ["lint"],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "include": ["dist", "README.md"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SorenHolstHansen/runtime-lint.git",
+    "directory": "packages/runtime-lint"
+  },
+  "bugs": {
+    "url": "git+https://github.com/SorenHolstHansen/runtime-lint/issues"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "license": "MIT"
 }
