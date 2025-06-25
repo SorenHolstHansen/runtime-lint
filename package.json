@@ -1,23 +1,23 @@
 {
-	"name": "runtime-lint-monorepo",
-	"version": "0.0.1",
-	"description": "Monorepo for runtime-lint and related projects",
-	"private": true,
-	"workspaces": ["packages/*", "examples/*"],
-	"license": "MIT",
-	"packageManager": "npm@10.2.0",
-	"scripts": {
-		"lint": "npx @biomejs/biome check --write .",
-		"test": "npm --prefix packages/runtime-lint run test"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/SorenHolstHansen/runtime-lint.git"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "1.8.1"
-	},
-	"engines": {
-		"node": ">=22.0.0"
-	}
+  "name": "runtime-lint-monorepo",
+  "version": "0.0.1",
+  "description": "Monorepo for runtime-lint and related projects",
+  "private": true,
+  "workspaces": ["packages/*", "examples/*"],
+  "license": "MIT",
+  "packageManager": "npm@10.2.0",
+  "scripts": {
+    "format": "npx @biomejs/biome check --write .",
+    "test": "npm --prefix packages/runtime-lint run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SorenHolstHansen/runtime-lint.git"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
 }
