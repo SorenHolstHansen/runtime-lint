@@ -7,7 +7,7 @@ import type { Comment, Post } from "../../types";
 async function getPosts(): Promise<Post[]> {
   const postsRes = await fetch("https://jsonplaceholder.typicode.com/posts");
   const posts: Post[] = await postsRes.json();
-  return posts;
+  return posts.slice(0, 20);
 }
 
 export default function Home() {
