@@ -1,5 +1,5 @@
-import { runtimeLint } from "../core/index.js";
 import { useEffect, useMemo, useState } from "react";
+import { runtimeLint } from "../core/index.js";
 import { Logo, XIcon } from "./icons.js";
 
 export function Widget() {

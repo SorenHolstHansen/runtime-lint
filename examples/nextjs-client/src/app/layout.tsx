@@ -1,5 +1,5 @@
 "use client";
-import 'runtime-lint';
+import "runtime-lint";
 import "./globals.css";
 
 export default function RootLayout({

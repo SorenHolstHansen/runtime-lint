@@ -1,8 +1,8 @@
-import * as fs from 'node:fs';
-import path from 'node:path';
-import { defineConfig } from 'tsup';
+import * as fs from "node:fs";
+import path from "node:path";
+import { defineConfig } from "tsup";
 
-const DIST_PATH = './dist';
+const DIST_PATH = "./dist";
 const banner = `/**
  * Copyright 2025 Søren Hansen.
  *
@@ -24,7 +24,7 @@ const banner = `/**
 
 export default defineConfig([
   {
-    entry: ['./src/index.tsx'],
+    entry: ["./src/index.tsx"],
     outDir: DIST_PATH,
     banner: {
       js: banner,
@@ -32,26 +32,26 @@ export default defineConfig([
     splitting: false,
     clean: false,
     sourcemap: false,
-    format: ['iife'],
-    target: 'esnext',
-    platform: 'browser',
+    format: ["iife"],
+    target: "esnext",
+    platform: "browser",
     treeshake: true,
     dts: true,
-    minify: process.env.NODE_ENV === 'production' ? 'terser' : false,
+    minify: process.env.NODE_ENV === "production" ? "terser" : false,
     env: {
-      NODE_ENV: process.env.NODE_ENV ?? 'development',
+      NODE_ENV: process.env.NODE_ENV ?? "development",
     },
     external: [
-      'react',
-      'react-dom',
-      'next',
-      'next/navigation',
-      'react-router',
-      'react-router-dom',
-      '@remix-run/react',
+      "react",
+      "react-dom",
+      "next",
+      "next/navigation",
+      "react-router",
+      "react-router-dom",
+      "@remix-run/react",
     ],
     loader: {
-      '.css': 'text',
+      ".css": "text",
     },
   },
 ]);

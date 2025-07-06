@@ -1,7 +1,7 @@
 "use client";
-import styles from "./output.css";
 import { createRoot } from "react-dom/client";
-import { Widget } from './widget/index.js';
+import styles from "./output.css";
+import { Widget } from "./widget/index.js";
 
 function lint() {
   console.log("Runtime linting started");
