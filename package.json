@@ -1,6 +1,6 @@
 {
   "name": "runtime-lint-monorepo",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Monorepo for runtime-lint and related projects",
   "private": true,
   "workspaces": ["packages/*", "examples/*"],

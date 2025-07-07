@@ -1,6 +1,22 @@
-import * as fs from "node:fs";
+import fsPromise from "node:fs/promises";
 import path from "node:path";
 import { defineConfig } from "tsup";
+
+const addDirectivesToChunkFiles = async (readPath: string): Promise<void> => {
+  try {
+    const files = await fsPromise.readdir(readPath);
+    for (const file of files) {
+      if (file.endsWith(".mjs") || file.endsWith(".js")) {
+        const filePath = path.join(readPath, file);
+        const data = await fsPromise.readFile(filePath, "utf8");
+        const updatedContent = `'use client';\n${data}`;
+        await fsPromise.writeFile(filePath, updatedContent, "utf8");
+      }
+    }
+  } catch (err) {
+    console.error("Error:", err);
+  }
+};
 
 const DIST_PATH = "./dist";
 const banner = `/**
@@ -52,6 +68,9 @@ export default defineConfig([
     ],
     loader: {
       ".css": "text",
+    },
+    async onSuccess() {
+      await Promise.all([addDirectivesToChunkFiles(DIST_PATH)]);
     },
   },
 ]);
