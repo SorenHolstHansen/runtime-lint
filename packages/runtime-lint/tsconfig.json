@@ -6,12 +6,6 @@
     "baseUrl": ".",
     "types": ["node"]
   },
-  "include": [
-    "src",
-    "global.d.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["src", "global.d.ts"],
+  "exclude": ["node_modules", "dist"]
 }
