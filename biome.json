@@ -1,7 +1,12 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
   "files": {
-    "ignore": ["**/dist/*", ".next", "packages/runtime-lint/input.css"]
+    "ignore": [
+      "**/dist/*",
+      ".next",
+      "packages/runtime-lint/input.css",
+      "packages/runtime-lint/src/output.css"
+    ]
   },
   "vcs": {
     "enabled": true,
