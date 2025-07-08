@@ -57,15 +57,6 @@ export default defineConfig([
     env: {
       NODE_ENV: process.env.NODE_ENV ?? "development",
     },
-    external: [
-      "react",
-      "react-dom",
-      "next",
-      "next/navigation",
-      "react-router",
-      "react-router-dom",
-      "@remix-run/react",
-    ],
     loader: {
       ".css": "text",
     },

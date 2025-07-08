@@ -1,5 +1,5 @@
 "use client";
-import { createRoot } from "react-dom/client";
+import { render } from "preact";
 import styles from "./output.css";
 import { Widget } from "./widget/index.js";
 
@@ -16,8 +16,7 @@ function lint() {
 
   document.body.appendChild(rootContainer);
 
-  const root = createRoot(shadowRoot);
-  root.render(<Widget />);
+  render(<Widget />, shadowRoot);
 }
 
 if (typeof window !== "undefined") {

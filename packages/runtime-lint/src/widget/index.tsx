@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "preact/hooks";
 import { runtimeLint } from "../core/index.js";
 import { Logo, XIcon } from "./icons.js";
+import type { ComponentChildren } from "preact";
 
 export function Widget() {
   const [queriesInLoop, setQueriesInLoop] = useState<string[]>([]);
@@ -27,8 +28,8 @@ export function Widget() {
     });
   }, []);
   return (
-    <div className="absolute bottom-5 right-5 z-50">
-      <div className="h-9 relative">
+    <div class="absolute bottom-5 right-5 z-50">
+      <div class="h-9 relative">
         <WidgetFloat
           numErrors={numErrors}
           onClick={() => setShowWidgetScreen((c) => !c)}
@@ -58,21 +59,17 @@ function WidgetScreen({
   onClose: () => void;
 }) {
   return (
-    <div className="absolute bottom-10 right-0 bg-background rounded-lg w-96 h-96 overflow-hidden flex flex-col">
-      <div className="border-b px-2 py-1 flex justify-between items-center">
-        <div className="flex gap-2 text-xs">
-          <div className="rounded p-1 border border-transparent">Lints</div>
+    <div class="absolute bottom-10 right-0 bg-background rounded-lg w-96 h-96 overflow-hidden flex flex-col">
+      <div class="border-b px-2 py-1 flex justify-between items-center">
+        <div class="flex gap-2 text-xs">
+          <div class="rounded p-1 border border-transparent">Lints</div>
         </div>
-        <button
-          type="button"
-          className="cursor-pointer"
-          onClick={() => onClose()}
-        >
+        <button type="button" class="cursor-pointer" onClick={() => onClose()}>
           <XIcon size={12} />
         </button>
       </div>
-      <div className="flex-1 overflow-hidden">
-        <div className="p-2 pb-6 overflow-y-auto w-full space-y-2 h-full">
+      <div class="flex-1 overflow-hidden">
+        <div class="p-2 pb-6 overflow-y-auto w-full space-y-2 h-full">
           {queriesInLoop.length > 0 && (
             <LintCard
               title="Queries in Loop detected"
@@ -130,16 +127,16 @@ function WidgetFloat({
 }: { numErrors: number; onClick: () => void }) {
   return (
     <button
-      className="cursor-pointer hover:bg-background/90 transition-colors rounded-full bg-background flex items-center"
+      class="cursor-pointer hover:bg-background/90 transition-colors rounded-full bg-background flex items-center"
       onClick={onClick}
       type="button"
     >
-      <div className="h-9 w-9 flex items-center justify-center">
+      <div class="h-9 w-9 flex items-center justify-center">
         <Logo size={24} />
       </div>
       {numErrors > 0 && (
-        <div className="flex items-center gap-2 pr-2">
-          <p className="bg-destructive-foreground rounded text-xs px-1">
+        <div class="flex items-center gap-2 pr-2">
+          <p class="bg-destructive-foreground rounded text-xs px-1">
             {numErrors}
           </p>
         </div>
@@ -159,20 +156,20 @@ function LintCard({
   description: string;
   details: string;
   numCases: number;
-  children: React.ReactNode;
+  children: ComponentChildren;
 }) {
   const [expanded, setExpanded] = useState(false);
   return (
     <button
-      className="border border-ring p-2 rounded w-full text-left cursor-pointer"
+      class="border border-ring p-2 rounded w-full text-left cursor-pointer"
       type="button"
       onClick={() => setExpanded(true)}
     >
       <p>{title}</p>
-      <p className="text-sm text-muted-foreground" title={details}>
+      <p class="text-sm text-muted-foreground" title={details}>
         {description}
       </p>
-      <div className="text-xs text-muted-foreground">
+      <div class="text-xs text-muted-foreground">
         <p>
           {numCases} case
           {numCases !== 1 ? "s" : ""}
@@ -181,8 +178,8 @@ function LintCard({
 
       {expanded && (
         <div>
-          <hr className="h-px w-full bg-ring my-1" />
-          <div className="text-xs p-2">{children}</div>
+          <hr class="h-px w-full bg-ring my-1" />
+          <div class="text-xs p-2">{children}</div>
         </div>
       )}
     </button>
