@@ -5,7 +5,7 @@
       "**/dist/*",
       ".next",
       "packages/runtime-lint/input.css",
-      "packages/runtime-lint/src/output.css"
+      ".changeset"
     ]
   },
   "vcs": {

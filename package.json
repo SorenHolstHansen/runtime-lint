@@ -7,6 +7,9 @@
   "license": "MIT",
   "packageManager": "npm@10.2.0",
   "scripts": {
+    "changeset:add": "@changesets/cli",
+    "changeset:publish": "@changesets/cli publish",
+    "prepublishOnly": "echo 'Please use changesets' && exit 1",
     "format": "npx @biomejs/biome check --write .",
     "test": "npm --prefix packages/runtime-lint run test"
   },
@@ -19,5 +22,8 @@
   },
   "engines": {
     "node": ">=22.0.0"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.29.5"
   }
 }
