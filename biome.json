@@ -4,8 +4,7 @@
     "ignore": [
       "**/dist/*",
       ".next",
-      "packages/runtime-lint/input.css",
-      "packages/runtime-lint/src/output.css"
+      "packages/runtime-lint/input.css"
     ]
   },
   "vcs": {

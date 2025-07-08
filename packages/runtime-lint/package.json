@@ -1,6 +1,6 @@
 {
   "name": "runtime-lint",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A runtime \"linter\" for your js application.",
   "keywords": ["lint"],
   "license": "MIT",
@@ -16,6 +16,7 @@
     "url": "git+https://github.com/SorenHolstHansen/runtime-lint/issues"
   },
   "scripts": {
+    "prepublishOnly": "echo 'Please use changesets' && exit 1",
     "build:tsup": "NODE_ENV=production tsup",
     "build:css": "npx @tailwindcss/cli -i ./input.css -o ./src/output.css",
     "build": "npm-run-all --parallel build:css build:tsup",
