@@ -29,16 +29,13 @@
   "dependencies": {
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "preact": "^10.26.9",
     "tailwind-merge": "^3.3.1",
     "tw-animate-css": "^1.3.5"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.10",
     "@types/node": "^20.14.9",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
     "express": "^4.19.2",
     "npm-run-all": "^4.1.5",
     "tailwindcss": "^4.1.10",

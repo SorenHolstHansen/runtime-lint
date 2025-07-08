@@ -1,4 +1,7 @@
-export function Logo({ size = 24, className = "" }) {
+export function Logo({
+  size = 24,
+  class: className = "",
+}: { size?: number; class?: string }) {
   return (
     // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
     <svg
@@ -6,7 +9,7 @@ export function Logo({ size = 24, className = "" }) {
       width={size}
       height={size}
       fill="none"
-      className={className}
+      class={className}
       viewBox="0 0 256 256"
     >
       <path
@@ -17,21 +20,24 @@ export function Logo({ size = 24, className = "" }) {
         points="160 128 96 88 96 168 160 128"
         fill="none"
         stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="16"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="16"
       />
     </svg>
   );
 }
 
-export function XIcon({ size = 24, className = "" }) {
+export function XIcon({
+  size = 24,
+  class: className = "",
+}: { size?: number; class?: string }) {
   return (
     // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
     <svg
       width={size}
       height={size}
-      className={className}
+      class={className}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 256 256"
     >
@@ -42,9 +48,9 @@ export function XIcon({ size = 24, className = "" }) {
         x2="56"
         y2="200"
         stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="16"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="16"
       />
       <line
         x1="200"
@@ -52,9 +58,9 @@ export function XIcon({ size = 24, className = "" }) {
         x2="56"
         y2="56"
         stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="16"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="16"
       />
     </svg>
   );
