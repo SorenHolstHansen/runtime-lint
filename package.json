@@ -8,8 +8,9 @@
   "packageManager": "npm@10.2.0",
   "scripts": {
     "changeset:add": "changeset",
+    "prechangeset:publish": "echo 'SHOULD ONLY BE RUN THROUGH CI!' && exit 1",
     "changeset:publish": "changeset publish",
-    "prepublishOnly": "echo 'Please use changesets' && exit 1",
+    "prepublishOnly": "echo 'PLEASE USE CHANGESETS!' && exit 1",
     "format": "npx @biomejs/biome check --write .",
     "test": "npm --prefix packages/runtime-lint run test"
   },
