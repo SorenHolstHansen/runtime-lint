@@ -19,7 +19,7 @@
     "prepublishOnly": "echo 'Please use changesets' && exit 1",
     "build:tsup": "NODE_ENV=production tsup",
     "build:css": "npx @tailwindcss/cli -i ./input.css -o ./src/output.css",
-    "build": "npm-run-all --parallel build:css build:tsup",
+    "build": "npm run build:css && npm run build:tsup",
     "dev:tsup": "NODE_ENV=development tsup --watch",
     "dev:css": "npx @tailwindcss/cli -i ./input.css -o ./src/output.css --watch",
     "dev": "npm-run-all --parallel dev:css dev:tsup",
