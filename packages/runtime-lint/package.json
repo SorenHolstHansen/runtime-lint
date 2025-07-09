@@ -2,7 +2,9 @@
   "name": "runtime-lint",
   "version": "0.2.3",
   "description": "A runtime \"linter\" for your js application.",
-  "keywords": ["lint"],
+  "keywords": [
+    "lint"
+  ],
   "license": "MIT",
   "main": "dist/index.global.js",
   "types": "dist/index.d.ts",
@@ -17,7 +19,7 @@
   },
   "scripts": {
     "build:tsup": "NODE_ENV=production tsup",
-    "build:css": "npx @tailwindcss/cli -i ./input.css -o ./src/output.css",
+    "build:css": "npx @tailwindcss/cli -i ./input.css -o ./src/output.css --minify",
     "build": "npm run build:css && npm run build:tsup",
     "dev:tsup": "NODE_ENV=development tsup --watch",
     "dev:css": "npx @tailwindcss/cli -i ./input.css -o ./src/output.css --watch",
@@ -29,6 +31,7 @@
   "dependencies": {
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "object-scout": "^0.1.0",
     "preact": "^10.26.9",
     "tailwind-merge": "^3.3.1",
     "tw-animate-css": "^1.3.5"
@@ -42,7 +45,10 @@
     "tsup": "^8.5.0",
     "tsx": "^4.15.7"
   },
-  "include": ["dist", "README.md"],
+  "include": [
+    "dist",
+    "README.md"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

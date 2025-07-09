@@ -1,4 +1,4 @@
-import { type ObjectWithStats, objectStats } from "../../utils/objectStats.js";
+import { objectScout, type ScoutedObject } from "object-scout";
 
 export type OverFetchingConfig = {
   /**
@@ -11,7 +11,7 @@ export type OverFetchingConfig = {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   heuristic: <T extends any[] | Record<string, any>>(
     response: T,
-    responseWithStats: ObjectWithStats<T>,
+    responseWithStats: ScoutedObject<T>,
   ) => boolean;
   /**
    * Wait for some milliseconds before detecting overFetching for a response.
@@ -28,7 +28,7 @@ export const DEFAULT_OVERFETCHING_CONFIG: OverFetchingConfig = {
   },
   heuristic: (response, responseWithStats) => {
     if (Array.isArray(response)) {
-      const arrayElemsUnused = Object.values(responseWithStats.__stats).filter(
+      const arrayElemsUnused = Object.values(responseWithStats.__object_scout).filter(
         (value) => value.count == null || value.count === 0,
       ).length;
       if (arrayElemsUnused > response.length / 2) {
@@ -37,7 +37,7 @@ export const DEFAULT_OVERFETCHING_CONFIG: OverFetchingConfig = {
     } else {
       // Is a simple object. Only check top-level keys and check if under half of them have been used
       const numToplevelKeys = Object.keys(responseWithStats).length;
-      const unaccessKeysCount = Object.values(responseWithStats.__stats).filter(
+      const unaccessKeysCount = Object.values(responseWithStats.__object_scout).filter(
         (value) => value.count == null || value.count === 0,
       ).length;
       if (unaccessKeysCount > numToplevelKeys / 2) {
@@ -56,7 +56,7 @@ export function detectOverfetching<T extends any[] | Record<string, any>>(
   url: string,
   config: OverFetchingConfig,
 ): T {
-  const statObject = objectStats(response);
+  const statObject = objectScout(response);
 
   setTimeout(() => {
     if (config.heuristic(response, statObject)) {
