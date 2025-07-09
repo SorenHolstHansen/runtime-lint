@@ -1,4 +1,4 @@
-import { objectScout, type ScoutedObject } from "object-scout";
+import { type ScoutedObject, objectScout } from "object-scout";
 
 export type OverFetchingConfig = {
   /**
@@ -28,18 +28,18 @@ export const DEFAULT_OVERFETCHING_CONFIG: OverFetchingConfig = {
   },
   heuristic: (response, responseWithStats) => {
     if (Array.isArray(response)) {
-      const arrayElemsUnused = Object.values(responseWithStats.__object_scout).filter(
-        (value) => value.count == null || value.count === 0,
-      ).length;
+      const arrayElemsUnused = Object.values(
+        responseWithStats.__object_scout,
+      ).filter((value) => value.count == null || value.count === 0).length;
       if (arrayElemsUnused > response.length / 2) {
         return true;
       }
     } else {
       // Is a simple object. Only check top-level keys and check if under half of them have been used
       const numToplevelKeys = Object.keys(responseWithStats).length;
-      const unaccessKeysCount = Object.values(responseWithStats.__object_scout).filter(
-        (value) => value.count == null || value.count === 0,
-      ).length;
+      const unaccessKeysCount = Object.values(
+        responseWithStats.__object_scout,
+      ).filter((value) => value.count == null || value.count === 0).length;
       if (unaccessKeysCount > numToplevelKeys / 2) {
         return true;
       }
