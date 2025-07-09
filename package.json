@@ -10,7 +10,6 @@
     "changeset:add": "changeset",
     "prechangeset:publish": "npm run build --prefix packages/runtime-lint",
     "changeset:publish": "changeset publish",
-    "prepublishOnly": "echo 'PLEASE USE CHANGESETS!' && exit 1",
     "format": "npx @biomejs/biome check --write .",
     "test": "npm --prefix packages/runtime-lint run test"
   },
