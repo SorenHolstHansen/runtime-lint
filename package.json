@@ -11,7 +11,7 @@
     "prechangeset:publish": "npm run build --prefix packages/runtime-lint",
     "changeset:publish": "changeset publish",
     "format": "npx @biomejs/biome check --write .",
-    "test": "npm --prefix packages/runtime-lint run test"
+    "test": "npm --prefix packages/runtime-lint run test && npm --prefix packages/access-log run test"
   },
   "repository": {
     "type": "git",
