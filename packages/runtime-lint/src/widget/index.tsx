@@ -1,8 +1,8 @@
 import type { ComponentChildren } from "preact";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { runtimeLint } from "../core/index.js";
-import { CaretDownIcon, InfoIcon, Logo, XIcon } from "./icons.js";
 import { cn } from "../utils/cn.js";
+import { CaretDownIcon, InfoIcon, Logo, XIcon } from "./icons.js";
 
 export function Widget() {
   const [queriesInLoop, setQueriesInLoop] = useState<string[]>([]);
