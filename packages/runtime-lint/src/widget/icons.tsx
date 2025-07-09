@@ -41,7 +41,6 @@ export function XIcon({
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 256 256"
     >
-      <rect width="256" height="256" fill="none" />
       <line
         x1="200"
         y1="56"
@@ -57,6 +56,67 @@ export function XIcon({
         y1="200"
         x2="56"
         y2="56"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="16"
+      />
+    </svg>
+  );
+}
+
+export function InfoIcon({
+  size = 24,
+  class: className = "",
+}: { size?: number; class?: string }) {
+  return (
+    // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+    <svg
+      width={size}
+      height={size}
+      class={className}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 256 256"
+    >
+      <circle
+        cx="128"
+        cy="128"
+        r="96"
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="16"
+      />
+      <path
+        d="M120,120a8,8,0,0,1,8,8v40a8,8,0,0,0,8,8"
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="16"
+      />
+      <circle cx="124" cy="84" r="12" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function CaretDownIcon({
+  size = 24,
+  class: className = "",
+}: { size?: number; class?: string }) {
+  return (
+    // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+    <svg
+      width={size}
+      height={size}
+      class={className}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 256 256"
+    >
+      <polyline
+        points="208 96 128 176 48 96"
+        fill="none"
         stroke="currentColor"
         stroke-linecap="round"
         stroke-linejoin="round"

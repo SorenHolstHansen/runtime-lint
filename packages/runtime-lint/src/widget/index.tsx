@@ -1,7 +1,8 @@
 import type { ComponentChildren } from "preact";
-import { useEffect, useMemo, useState } from "preact/hooks";
+import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { runtimeLint } from "../core/index.js";
-import { Logo, XIcon } from "./icons.js";
+import { CaretDownIcon, InfoIcon, Logo, XIcon } from "./icons.js";
+import { cn } from "../utils/cn.js";
 
 export function Widget() {
   const [queriesInLoop, setQueriesInLoop] = useState<string[]>([]);
@@ -159,29 +160,63 @@ function LintCard({
   children: ComponentChildren;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
   return (
-    <button
-      class="border border-ring p-2 rounded w-full text-left cursor-pointer"
-      type="button"
-      onClick={() => setExpanded(true)}
-    >
-      <p>{title}</p>
-      <p class="text-sm text-muted-foreground" title={details}>
-        {description}
-      </p>
-      <div class="text-xs text-muted-foreground">
-        <p>
-          {numCases} case
-          {numCases !== 1 ? "s" : ""}
-        </p>
-      </div>
-
-      {expanded && (
-        <div>
-          <hr class="h-px w-full bg-ring my-1" />
-          <div class="text-xs p-2">{children}</div>
+    <>
+      <button
+        class="border border-ring p-2 rounded w-full text-left cursor-pointer"
+        type="button"
+        onClick={() => setExpanded((b) => !b)}
+      >
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <p>{title}</p>
+            <button
+              type="button"
+              class="text-muted-foreground cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                dialogRef.current?.showModal();
+              }}
+            >
+              <InfoIcon size={16} />
+            </button>
+          </div>
+          <CaretDownIcon
+            size={12}
+            class={cn("transition-transform", expanded && "rotate-180")}
+          />
         </div>
-      )}
-    </button>
+        <p class="text-sm text-muted-foreground">{description}</p>
+        <div class="text-xs text-muted-foreground">
+          <p>
+            {numCases} case
+            {numCases !== 1 ? "s" : ""}
+          </p>
+        </div>
+
+        {expanded && (
+          <div>
+            <hr class="h-px w-full bg-ring my-1" />
+            <div class="text-xs p-2">{children}</div>
+          </div>
+        )}
+      </button>
+
+      <dialog
+        class="w-96 rounded-md bg-background top-1/2 left-1/2 text-foreground -translate-x-1/2 -translate-y-1/2 p-6"
+        onClick={() => dialogRef.current?.close()}
+        onKeyDown={() => dialogRef.current?.close()}
+        ref={dialogRef}
+      >
+        <div
+          onKeyDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h2 class="mb-2">{title}</h2>
+          <p class="text-sm whitespace-pre-line">{details}</p>
+        </div>
+      </dialog>
+    </>
   );
 }
