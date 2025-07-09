@@ -2,9 +2,7 @@
   "name": "runtime-lint",
   "version": "0.2.3",
   "description": "A runtime \"linter\" for your js application.",
-  "keywords": [
-    "lint"
-  ],
+  "keywords": ["lint"],
   "license": "MIT",
   "main": "dist/index.global.js",
   "types": "dist/index.d.ts",
@@ -18,7 +16,6 @@
     "url": "git+https://github.com/SorenHolstHansen/runtime-lint/issues"
   },
   "scripts": {
-    "prepublishOnly": "echo 'Please use changesets' && exit 1",
     "build:tsup": "NODE_ENV=production tsup",
     "build:css": "npx @tailwindcss/cli -i ./input.css -o ./src/output.css",
     "build": "npm run build:css && npm run build:tsup",
@@ -45,10 +42,7 @@
     "tsup": "^8.5.0",
     "tsx": "^4.15.7"
   },
-  "include": [
-    "dist",
-    "README.md"
-  ],
+  "include": ["dist", "README.md"],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
