@@ -1,5 +1,11 @@
 # runtime-lint
 
+## 0.2.4
+
+### Patch Changes
+
+- 924acd6: use external object-scout and minify css
+
 ## 0.2.3
 
 ### Patch Changes
