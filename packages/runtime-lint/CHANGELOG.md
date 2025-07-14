@@ -1,5 +1,11 @@
 # runtime-lint
 
+## 0.3.0
+
+### Minor Changes
+
+- 6578f22: move previous index to auto for automatic instrumentation. Add new index export for manual instrumentation
+
 ## 0.2.4
 
 ### Patch Changes
