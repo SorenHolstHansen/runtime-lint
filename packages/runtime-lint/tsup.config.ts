@@ -40,7 +40,7 @@ const banner = `/**
 
 export default defineConfig([
   {
-    entry: ["./src/index.tsx"],
+    entry: ["./src/auto.ts"],
     outDir: DIST_PATH,
     banner: {
       js: banner,
@@ -49,6 +49,28 @@ export default defineConfig([
     clean: false,
     sourcemap: false,
     format: ["iife"],
+    target: "esnext",
+    platform: "browser",
+    treeshake: true,
+    dts: true,
+    minify: process.env.NODE_ENV === "production",
+    env: {
+      NODE_ENV: process.env.NODE_ENV ?? "development",
+    },
+    loader: {
+      ".css": "text",
+    },
+  },
+  {
+    entry: ["./src/index.ts"],
+    outDir: DIST_PATH,
+    banner: {
+      js: banner,
+    },
+    splitting: false,
+    clean: false,
+    sourcemap: false,
+    format: ["cjs", "esm"],
     target: "esnext",
     platform: "browser",
     treeshake: true,

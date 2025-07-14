@@ -15,7 +15,7 @@ It is very simply to add to any project, just add this to the `<head>` of your h
 ```html
 <script
   crossOrigin="anonymous"
-  src="//unpkg.com/runtime-lint/dist/index.global.js"
+  src="//unpkg.com/runtime-lint/dist/auto.global.js"
 />
 ```
 
