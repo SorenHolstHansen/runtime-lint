@@ -4,7 +4,7 @@
   "description": "A runtime \"linter\" for your js application.",
   "keywords": ["lint"],
   "license": "MIT",
-  "main": "dist/index.global.js",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
   "repository": {
