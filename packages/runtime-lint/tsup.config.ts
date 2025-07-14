@@ -40,7 +40,7 @@ const banner = `/**
 
 export default defineConfig([
   {
-    entry: ["./src/auto.tsx"],
+    entry: ["./src/auto.ts"],
     outDir: DIST_PATH,
     banner: {
       js: banner,
