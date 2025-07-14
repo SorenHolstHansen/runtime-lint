@@ -1,9 +1,10 @@
-"use client";
 import { render } from "preact";
 import styles from "./output.css";
-import { Widget } from "./widget/index.js";
+import { Widget } from "./index.js";
 
-function lint() {
+export function initWidget() {
+  if (typeof window === "undefined") return;
+
   console.log("Runtime linting started");
   const rootContainer = document.createElement("div");
   rootContainer.id = "runtime-lint-root";
@@ -17,8 +18,4 @@ function lint() {
   document.body.appendChild(rootContainer);
 
   render(<Widget />, shadowRoot);
-}
-
-if (typeof window !== "undefined") {
-  lint();
 }

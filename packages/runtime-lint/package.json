@@ -2,9 +2,7 @@
   "name": "runtime-lint",
   "version": "0.2.4",
   "description": "A runtime \"linter\" for your js application.",
-  "keywords": [
-    "lint"
-  ],
+  "keywords": ["lint"],
   "license": "MIT",
   "main": "dist/index.global.js",
   "types": "dist/index.d.ts",
@@ -45,14 +43,49 @@
     "tsup": "^8.5.0",
     "tsx": "^4.15.7"
   },
-  "include": [
-    "dist",
-    "README.md"
-  ],
+  "include": ["dist", "README.md"],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.global.js"
+      "production": {
+        "import": {
+          "types": "./dist/index.d.mts",
+          "react-server": "./dist/rsc-shim.mjs",
+          "default": "./dist/index.mjs"
+        },
+        "require": {
+          "types": "./dist/index.d.mts",
+          "react-server": "./dist/rsc-shim.js",
+          "default": "./dist/index.mjs"
+        }
+      },
+      "development": {
+        "import": {
+          "types": "./dist/index.d.mts",
+          "react-server": "./dist/rsc-shim.mjs",
+          "default": "./dist/index.mjs"
+        },
+        "require": {
+          "types": "./dist/index.d.ts",
+          "react-server": "./dist/rsc-shim.js",
+          "default": "./dist/index.js"
+        }
+      },
+      "default": {
+        "import": {
+          "types": "./dist/index.d.mts",
+          "react-server": "./dist/rsc-shim.mjs",
+          "default": "./dist/index.mjs"
+        },
+        "require": {
+          "types": "./dist/index.d.ts",
+          "react-server": "./dist/rsc-shim.js",
+          "default": "./dist/index.js"
+        }
+      }
+    },
+    "auto": {
+      "types": "./dist/auto.d.ts",
+      "default": "./dist/auto.global.js"
     },
     "./package.json": "./package.json"
   }
