@@ -46,44 +46,10 @@
   "include": ["dist", "README.md"],
   "exports": {
     ".": {
-      "production": {
-        "import": {
-          "types": "./dist/index.d.mts",
-          "react-server": "./dist/rsc-shim.mjs",
-          "default": "./dist/index.mjs"
-        },
-        "require": {
-          "types": "./dist/index.d.mts",
-          "react-server": "./dist/rsc-shim.js",
-          "default": "./dist/index.mjs"
-        }
-      },
-      "development": {
-        "import": {
-          "types": "./dist/index.d.mts",
-          "react-server": "./dist/rsc-shim.mjs",
-          "default": "./dist/index.mjs"
-        },
-        "require": {
-          "types": "./dist/index.d.ts",
-          "react-server": "./dist/rsc-shim.js",
-          "default": "./dist/index.js"
-        }
-      },
-      "default": {
-        "import": {
-          "types": "./dist/index.d.mts",
-          "react-server": "./dist/rsc-shim.mjs",
-          "default": "./dist/index.mjs"
-        },
-        "require": {
-          "types": "./dist/index.d.ts",
-          "react-server": "./dist/rsc-shim.js",
-          "default": "./dist/index.js"
-        }
-      }
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
-    "auto": {
+    "./auto": {
       "types": "./dist/auto.d.ts",
       "default": "./dist/auto.global.js"
     },

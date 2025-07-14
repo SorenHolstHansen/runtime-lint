@@ -103,8 +103,6 @@ function runtimeLint({
           config.duplicateResponses?.cb(url);
         } else {
           store[url] = {
-            // not strictly needed, but done to please ts
-            lastCalledAt: new Date(),
             ...store[url],
             response: res,
           };
@@ -142,7 +140,6 @@ function runtimeLint({
           config.duplicateResponses?.cb(url);
         } else {
           store[url] = {
-            lastCalledAt: new Date(),
             ...store[url],
             response: responseText,
           };

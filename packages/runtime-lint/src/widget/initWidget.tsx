@@ -1,5 +1,5 @@
 import { render } from "preact";
-import styles from "./output.css";
+import styles from "../output.css";
 import { Widget } from "./index.js";
 
 export function initWidget() {

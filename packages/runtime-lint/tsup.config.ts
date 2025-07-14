@@ -62,7 +62,7 @@ export default defineConfig([
     },
   },
   {
-    entry: ["./src/index.tsx"],
+    entry: ["./src/index.ts"],
     outDir: DIST_PATH,
     banner: {
       js: banner,
