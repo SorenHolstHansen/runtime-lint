@@ -1,5 +1,11 @@
 # runtime-lint
 
+## 0.3.1
+
+### Patch Changes
+
+- 32f683b: make it work in <head>, various ui tweaks, fix errors
+
 ## 0.3.0
 
 ### Minor Changes
