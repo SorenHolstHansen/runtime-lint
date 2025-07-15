@@ -24,7 +24,7 @@ export function Widget() {
         cb: (url) => setDuplicateResponses((c) => [...c, url]),
       },
       overFetching: {
-        cb: (url) => setOverFetching((c) => [...c, url]),
+        cb: (url) => setOverFetching((c) => [...c, url.toString()]),
       },
     });
   }, []);
@@ -59,6 +59,19 @@ function WidgetScreen({
   overFetching: string[];
   onClose: () => void;
 }) {
+  const duplicateResponsesByUrl = useMemo(() => {
+    return duplicateResponses.reduce(
+      (prev, curr) => {
+        if (prev[curr] != null) {
+          prev[curr] += 1;
+        } else {
+          prev[curr] = 1;
+        }
+        return prev;
+      },
+      {} as Record<string, number>,
+    );
+  }, [duplicateResponses]);
   return (
     <div class="absolute bottom-10 right-0 bg-background rounded-lg w-96 h-96 overflow-hidden flex flex-col">
       <div class="border-b px-2 py-1 flex justify-between items-center">
@@ -79,7 +92,7 @@ function WidgetScreen({
                     This might suggest that a fetch-call is made in a loop, or a query is made for each row in a table or similar.`}
               numCases={queriesInLoop.length}
             >
-              <ul>
+              <ul class="space-y-1">
                 {queriesInLoop.map((url) => (
                   <li key={url}>{url}</li>
                 ))}
@@ -94,7 +107,7 @@ function WidgetScreen({
                     At the moment, the rule reports underuse if less than half the top-level keys of a response has been used.`}
               numCases={overFetching.length}
             >
-              <ul>
+              <ul class="space-y-1">
                 {overFetching.map((url) => (
                   <li key={url}>{url}</li>
                 ))}
@@ -109,10 +122,19 @@ function WidgetScreen({
                     This might suggest a bad caching solution or a refetch policy that is too aggressive.`}
               numCases={duplicateResponses.length}
             >
-              <ul>
-                {duplicateResponses.map((url) => (
-                  <li key={url}>{url}</li>
-                ))}
+              <ul class="space-y-1 list-disc">
+                {Object.entries(duplicateResponsesByUrl).map(
+                  ([url, occurances]) => (
+                    <li key={url}>
+                      {url}
+                      {occurances > 1 && (
+                        <span class="text-xs bg-muted bg-muted-foreground rounded py-px px-1 ml-1">
+                          {occurances}
+                        </span>
+                      )}
+                    </li>
+                  ),
+                )}
               </ul>
             </LintCard>
           )}

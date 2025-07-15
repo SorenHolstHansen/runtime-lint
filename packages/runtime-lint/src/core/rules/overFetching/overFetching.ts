@@ -4,7 +4,7 @@ export type OverFetchingConfig = {
   /**
    * Callback to run whenever we detect a json response has been very underused, which could suggest overfetching.
    */
-  cb: (url: string) => void;
+  cb: (url: URL) => void;
   /**
    * Heuristic to apply to a json response after a certian time to determine if it has been underused or not. Return true if it is underused.
    */
@@ -53,7 +53,7 @@ export const DEFAULT_OVERFETCHING_CONFIG: OverFetchingConfig = {
 // biome-ignore lint/suspicious/noExplicitAny:
 export function detectOverfetching<T extends any[] | Record<string, any>>(
   response: T,
-  url: string,
+  url: URL,
   config: OverFetchingConfig,
 ): T {
   const statObject = objectScout(response);
