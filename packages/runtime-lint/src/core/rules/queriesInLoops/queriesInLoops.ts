@@ -28,7 +28,7 @@ export const DEFAULT_QUERY_IN_LOOP_CONFIG: QueryInLoopConfig = {
 
 const urlFamilies: Record<string, Loader</* url */ string>> = {};
 
-export function detectQueriesInLoops(url: string, config: QueryInLoopConfig) {
+export function detectQueriesInLoops(url: URL, config: QueryInLoopConfig) {
   const families = detectUrlFamilies(url);
   for (const family of families) {
     if (urlFamilies[family] == null) {
@@ -41,10 +41,10 @@ export function detectQueriesInLoops(url: string, config: QueryInLoopConfig) {
           delete urlFamilies[family];
         }
       });
-      loader.load(url);
+      loader.load(url.toString());
       urlFamilies[family] = loader;
     } else {
-      urlFamilies[family].load(url);
+      urlFamilies[family].load(url.toString());
     }
   }
 }

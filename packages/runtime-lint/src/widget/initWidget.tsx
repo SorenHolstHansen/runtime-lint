@@ -4,18 +4,19 @@ import { Widget } from "./index.js";
 
 export function initWidget() {
   if (typeof window === "undefined") return;
+  requestAnimationFrame(() => {
+    console.log("🚀 Runtime linting started");
+    const rootContainer = document.createElement("div");
+    rootContainer.id = "runtime-lint-root";
 
-  console.log("Runtime linting started");
-  const rootContainer = document.createElement("div");
-  rootContainer.id = "runtime-lint-root";
+    const shadowRoot = rootContainer.attachShadow({ mode: "open" });
+    const cssStyles = document.createElement("style");
+    cssStyles.textContent = styles;
 
-  const shadowRoot = rootContainer.attachShadow({ mode: "open" });
-  const cssStyles = document.createElement("style");
-  cssStyles.textContent = styles;
+    shadowRoot.appendChild(cssStyles);
 
-  shadowRoot.appendChild(cssStyles);
+    document.body.appendChild(rootContainer);
 
-  document.body.appendChild(rootContainer);
-
-  render(<Widget />, shadowRoot);
+    render(<Widget />, shadowRoot);
+  });
 }

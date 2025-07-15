@@ -80,17 +80,27 @@ function runtimeLint({
   // biome-ignore lint/suspicious/noGlobalAssign: This is sort of the whole point
   fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
     const res = await origFetch(input, init);
-    const url =
-      input instanceof URL
-        ? input.toString()
-        : typeof input === "string"
-          ? input
-          : input.url;
+    const urlString = input instanceof Request ? input.url : input;
+    let url: URL;
+    try {
+      if (urlString instanceof URL) {
+        url = urlString;
+      } else if (!urlString.startsWith("http")) {
+        url = new URL(window.location.origin + urlString);
+      } else {
+        url = new URL(urlString);
+      }
+    } catch (e) {
+      return;
+    }
 
     if (config.queryInLoop) {
       detectQueriesInLoops(url, config.queryInLoop);
     }
-    store[url] = { ...store[url], lastCalledAt: new Date() };
+    store[url.toString()] = {
+      ...store[url.toString()],
+      lastCalledAt: new Date(),
+    };
 
     res.json = new Proxy(res.json, {
       async apply(target, thisArg, argumentsList) {
@@ -99,11 +109,14 @@ function runtimeLint({
           thisArg,
           argumentsList,
         );
-        if (store[url] && deepEqual(store[url].response, res)) {
-          config.duplicateResponses?.cb(url);
+        if (
+          store[url.toString()] &&
+          deepEqual(store[url.toString()].response, res)
+        ) {
+          config.duplicateResponses?.cb(url.toString());
         } else {
-          store[url] = {
-            ...store[url],
+          store[url.toString()] = {
+            ...store[url.toString()],
             response: res,
           };
         }
@@ -128,7 +141,18 @@ function runtimeLint({
       _user,
       _password,
     ) {
-      const url = _url instanceof URL ? _url.toString() : _url;
+      let url: URL;
+      try {
+        if (_url instanceof URL) {
+          url = _url;
+        } else if (!_url.startsWith("http")) {
+          url = new URL(window.location.origin + _url);
+        } else {
+          url = new URL(_url);
+        }
+      } catch (e) {
+        return;
+      }
       if (config.queryInLoop) {
         detectQueriesInLoops(url, config.queryInLoop);
       }
@@ -136,11 +160,14 @@ function runtimeLint({
         const responseText = this.responseText;
         // TODO: the response text might not be equal for identical requests, because objects might not be sorted in the same way.
         // However for now we just do like this
-        if (store[url] && store[url].response === responseText) {
-          config.duplicateResponses?.cb(url);
+        if (
+          store[url.toString()] &&
+          store[url.toString()].response === responseText
+        ) {
+          config.duplicateResponses?.cb(url.toString());
         } else {
-          store[url] = {
-            ...store[url],
+          store[url.toString()] = {
+            ...store[url.toString()],
             response: responseText,
           };
         }

@@ -1,7 +1,6 @@
 const hasNumberRegex = /\d/;
 export const urls: Set<URL> = new Set();
-export function detectUrlFamilies(_url: string): string[] {
-  const url = new URL(_url);
+export function detectUrlFamilies(url: URL): string[] {
   urls.add(url);
   const families: string[] = [];
   for (const u of urls) {
