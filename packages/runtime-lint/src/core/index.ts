@@ -1,4 +1,9 @@
 import {
+  DEFAULT_DOM_SIZE_CONFIG,
+  type DomSizeConfig,
+  initDomSizeMetrics,
+} from "./rules/domSize/domSize.js";
+import {
   DEFAULT_OVERFETCHING_CONFIG,
   type OverFetchingConfig,
   detectOverfetching,
@@ -60,11 +65,14 @@ type Config = {
    * This is currently not supported for non-fetch uses (i.e. XMLHttpRequest, Axios, ...)
    */
   overFetching?: OverFetchingConfig;
+  domSize?: DomSizeConfig;
 };
+
 function runtimeLint({
   duplicateResponses,
   queryInLoop,
   overFetching,
+  domSize,
 }: { [Key in keyof Config]: RuleConfig<Config[Key]> }) {
   const config: Config = {
     duplicateResponses: setConfig(
@@ -73,7 +81,11 @@ function runtimeLint({
     ),
     queryInLoop: setConfig(queryInLoop, DEFAULT_QUERY_IN_LOOP_CONFIG),
     overFetching: setConfig(overFetching, DEFAULT_OVERFETCHING_CONFIG),
+    domSize: setConfig(domSize, DEFAULT_DOM_SIZE_CONFIG),
   };
+  if (config.domSize) {
+    initDomSizeMetrics(config.domSize);
+  }
   const origFetch = fetch;
 
   // @ts-ignore
@@ -186,4 +198,4 @@ function runtimeLint({
   }
 }
 
-export { runtimeLint };
+export { runtimeLint, type Config };
