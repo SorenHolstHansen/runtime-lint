@@ -1,4 +1,4 @@
-import { type ScoutedObject, objectScout } from "object-scout";
+import { objectScout, type ScoutedObject } from "object-scout";
 
 export type OverFetchingConfig = {
   /**
@@ -8,7 +8,7 @@ export type OverFetchingConfig = {
   /**
    * Heuristic to apply to a json response after a certian time to determine if it has been underused or not. Return true if it is underused.
    */
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: response can be anything, should probably ensure types though
   heuristic: <T extends any[] | Record<string, any>>(
     response: T,
     responseWithStats: ScoutedObject<T>,
@@ -50,7 +50,7 @@ export const DEFAULT_OVERFETCHING_CONFIG: OverFetchingConfig = {
   msTillCheck: 1000,
 };
 
-// biome-ignore lint/suspicious/noExplicitAny:
+// biome-ignore lint/suspicious/noExplicitAny: response can be anything, should probably ensure types though
 export function detectOverfetching<T extends any[] | Record<string, any>>(
   response: T,
   url: URL,

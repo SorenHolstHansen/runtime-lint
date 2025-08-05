@@ -13,8 +13,7 @@ export function deepEqual(x: any, y: any) {
     if (Object.keys(x).length !== Object.keys(y).length) return false;
 
     for (const prop in x) {
-      // biome-ignore lint/suspicious/noPrototypeBuiltins:
-      if (y.hasOwnProperty(prop)) {
+      if (Object.hasOwn(y, prop)) {
         if (!deepEqual(x[prop], y[prop])) return false;
       } else return false;
     }

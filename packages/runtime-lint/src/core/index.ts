@@ -5,13 +5,13 @@ import {
 } from "./rules/domSize/domSize.js";
 import {
   DEFAULT_OVERFETCHING_CONFIG,
-  type OverFetchingConfig,
   detectOverfetching,
+  type OverFetchingConfig,
 } from "./rules/overFetching/overFetching.js";
 import {
   DEFAULT_QUERY_IN_LOOP_CONFIG,
-  type QueryInLoopConfig,
   detectQueriesInLoops,
+  type QueryInLoopConfig,
 } from "./rules/queriesInLoops/queriesInLoops.js";
 import { deepEqual } from "./utils/deepEqual.js";
 
@@ -102,7 +102,7 @@ function runtimeLint({
       } else {
         url = new URL(urlString);
       }
-    } catch (e) {
+    } catch (_) {
       return;
     }
 
@@ -162,7 +162,7 @@ function runtimeLint({
         } else {
           url = new URL(_url);
         }
-      } catch (e) {
+      } catch (_) {
         return;
       }
       if (config.queryInLoop) {
@@ -190,8 +190,8 @@ function runtimeLint({
 
       return origXHROpen.apply(
         this,
-        // biome-ignore lint/style/noArguments:
-        // biome-ignore lint/suspicious/noExplicitAny:
+        // biome-ignore lint/suspicious/noExplicitAny: This is just to silence ts
+        // biome-ignore lint/complexity/noArguments: This is the best way to do this
         arguments as any,
       );
     };

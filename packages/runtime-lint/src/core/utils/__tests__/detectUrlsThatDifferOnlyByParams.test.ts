@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { detectUrlFamilies, detectUrlFamily } from "../detectUrlFamilies.js";
+import { detectUrlFamily } from "../detectUrlFamilies.js";
 
 function testUrlFamily(
   url1: string,

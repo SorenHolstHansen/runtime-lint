@@ -34,7 +34,7 @@ export function detectUrlFamily(url1: URL, url2: URL): string | undefined {
     }
   }
   if (differencesAt.length === 1) {
-    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    // biome-ignore lint/style/noNonNullAssertion: This exists per the check
     const differenceAt = differencesAt[0]!;
     const family = uSplit
       .map((part, i) => (i === differenceAt ? "{PARAM}" : part))

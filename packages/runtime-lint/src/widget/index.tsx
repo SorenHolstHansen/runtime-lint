@@ -183,12 +183,13 @@ function WidgetScreen({
                         {domSizeWarnings.manyChildren.map(
                           ({ element, count }, i) => (
                             <button
-                              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                              // biome-ignore lint/suspicious/noArrayIndexKey: Doesn't matter as the order never changes
                               key={i}
                               type="button"
                               onClick={() => element.scrollTo()}
                               onMouseOver={() => {
                                 if (element instanceof HTMLElement) {
+                                  // biome-ignore lint/suspicious/noExplicitAny: I know this is not the best, but will live with it
                                   (element as any)._orig_box_shadow =
                                     element.style.boxShadow;
                                   element.style.boxShadow = "0 0 0 2px red";
@@ -196,6 +197,7 @@ function WidgetScreen({
                               }}
                               onFocus={() => {
                                 if (element instanceof HTMLElement) {
+                                  // biome-ignore lint/suspicious/noExplicitAny: I know this is not the best, but will live with it
                                   (element as any)._orig_box_shadow =
                                     element.style.boxShadow;
                                   element.style.boxShadow = "0 0 0 2px red";
@@ -203,16 +205,16 @@ function WidgetScreen({
                               }}
                               onMouseOut={() => {
                                 if (element instanceof HTMLElement) {
-                                  element.style.boxShadow = (
-                                    element as any
-                                  )._orig_box_shadow;
+                                  element.style.boxShadow =
+                                    // biome-ignore lint/suspicious/noExplicitAny: I know this is not the best, but will live with it
+                                    (element as any)._orig_box_shadow;
                                 }
                               }}
                               onBlur={() => {
                                 if (element instanceof HTMLElement) {
-                                  element.style.boxShadow = (
-                                    element as any
-                                  )._orig_box_shadow;
+                                  element.style.boxShadow =
+                                    // biome-ignore lint/suspicious/noExplicitAny: I know this is not the best, but will live with it
+                                    (element as any)._orig_box_shadow;
                                 }
                               }}
                             >
@@ -235,7 +237,10 @@ function WidgetScreen({
 function WidgetFloat({
   numErrors,
   onClick,
-}: { numErrors: number; onClick: () => void }) {
+}: {
+  numErrors: number;
+  onClick: () => void;
+}) {
   return (
     <button
       class="cursor-pointer hover:bg-background/90 transition-colors rounded-full bg-background flex items-center"
@@ -306,11 +311,10 @@ function LintCard({
         </div>
 
         {expanded && (
-          // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-          <div onClick={(e) => e.stopPropagation()}>
+          <button type="button" onClick={(e) => e.stopPropagation()}>
             <hr class="h-px w-full bg-ring my-1" />
             <div class="text-xs p-2">{children}</div>
-          </div>
+          </button>
         )}
       </button>
 
@@ -320,6 +324,7 @@ function LintCard({
         onKeyDown={() => dialogRef.current?.close()}
         ref={dialogRef}
       >
+        {/** biome-ignore lint/a11y/noStaticElementInteractions: This should definitely not be a button either, just for disabling propagation */}
         <div
           onKeyDown={(e) => e.stopPropagation()}
           onClick={(e) => e.stopPropagation()}

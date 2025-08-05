@@ -25,7 +25,14 @@ npm install runtime-lint
 ```
 and then import it somewhere in your project
 ```js
-import "runtime-lint";
+import "runtime-lint/auto";
+// Or, if you'd like to do it manually
+import {
+  // Call this to initialize the widget
+  initWidget,
+  // Low-level setup
+  runtimeLint
+} from "runtime-lint";
 ```
 
 Configuration is currently not supported, but the below describes the "linting" rules used.
