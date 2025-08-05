@@ -1,5 +1,11 @@
 # runtime-lint
 
+## 0.4.0
+
+### Minor Changes
+
+- 06839b8: add dom size lints
+
 ## 0.3.1
 
 ### Patch Changes
