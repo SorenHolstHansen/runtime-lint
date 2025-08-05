@@ -1,12 +1,17 @@
 import {
+  DEFAULT_DOM_SIZE_CONFIG,
+  type DomSizeConfig,
+  initDomSizeMetrics,
+} from "./rules/domSize/domSize.js";
+import {
   DEFAULT_OVERFETCHING_CONFIG,
-  type OverFetchingConfig,
   detectOverfetching,
+  type OverFetchingConfig,
 } from "./rules/overFetching/overFetching.js";
 import {
   DEFAULT_QUERY_IN_LOOP_CONFIG,
-  type QueryInLoopConfig,
   detectQueriesInLoops,
+  type QueryInLoopConfig,
 } from "./rules/queriesInLoops/queriesInLoops.js";
 import { deepEqual } from "./utils/deepEqual.js";
 
@@ -60,11 +65,14 @@ type Config = {
    * This is currently not supported for non-fetch uses (i.e. XMLHttpRequest, Axios, ...)
    */
   overFetching?: OverFetchingConfig;
+  domSize?: DomSizeConfig;
 };
+
 function runtimeLint({
   duplicateResponses,
   queryInLoop,
   overFetching,
+  domSize,
 }: { [Key in keyof Config]: RuleConfig<Config[Key]> }) {
   const config: Config = {
     duplicateResponses: setConfig(
@@ -73,7 +81,11 @@ function runtimeLint({
     ),
     queryInLoop: setConfig(queryInLoop, DEFAULT_QUERY_IN_LOOP_CONFIG),
     overFetching: setConfig(overFetching, DEFAULT_OVERFETCHING_CONFIG),
+    domSize: setConfig(domSize, DEFAULT_DOM_SIZE_CONFIG),
   };
+  if (config.domSize) {
+    initDomSizeMetrics(config.domSize);
+  }
   const origFetch = fetch;
 
   // @ts-ignore
@@ -90,7 +102,7 @@ function runtimeLint({
       } else {
         url = new URL(urlString);
       }
-    } catch (e) {
+    } catch (_) {
       return;
     }
 
@@ -150,7 +162,7 @@ function runtimeLint({
         } else {
           url = new URL(_url);
         }
-      } catch (e) {
+      } catch (_) {
         return;
       }
       if (config.queryInLoop) {
@@ -178,12 +190,12 @@ function runtimeLint({
 
       return origXHROpen.apply(
         this,
-        // biome-ignore lint/style/noArguments:
-        // biome-ignore lint/suspicious/noExplicitAny:
+        // biome-ignore lint/suspicious/noExplicitAny: This is just to silence ts
+        // biome-ignore lint/complexity/noArguments: This is the best way to do this
         arguments as any,
       );
     };
   }
 }
 
-export { runtimeLint };
+export { runtimeLint, type Config };

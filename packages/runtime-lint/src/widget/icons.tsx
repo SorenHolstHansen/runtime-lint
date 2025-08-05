@@ -1,9 +1,12 @@
 export function Logo({
   size = 24,
   class: className = "",
-}: { size?: number; class?: string }) {
+}: {
+  size?: number;
+  class?: string;
+}) {
   return (
-    // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+    // biome-ignore lint/a11y/noSvgWithoutTitle: Don't care
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width={size}
@@ -31,9 +34,12 @@ export function Logo({
 export function XIcon({
   size = 24,
   class: className = "",
-}: { size?: number; class?: string }) {
+}: {
+  size?: number;
+  class?: string;
+}) {
   return (
-    // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+    // biome-ignore lint/a11y/noSvgWithoutTitle: Don't care
     <svg
       width={size}
       height={size}
@@ -68,9 +74,12 @@ export function XIcon({
 export function InfoIcon({
   size = 24,
   class: className = "",
-}: { size?: number; class?: string }) {
+}: {
+  size?: number;
+  class?: string;
+}) {
   return (
-    // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+    // biome-ignore lint/a11y/noSvgWithoutTitle: Don't care
     <svg
       width={size}
       height={size}
@@ -104,9 +113,12 @@ export function InfoIcon({
 export function CaretDownIcon({
   size = 24,
   class: className = "",
-}: { size?: number; class?: string }) {
+}: {
+  size?: number;
+  class?: string;
+}) {
   return (
-    // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+    // biome-ignore lint/a11y/noSvgWithoutTitle: Don't care
     <svg
       width={size}
       height={size}

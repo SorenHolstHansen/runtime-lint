@@ -1,11 +1,12 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.1.1/schema.json",
   "files": {
-    "ignore": [
-      "**/dist/*",
-      ".next",
-      "packages/runtime-lint/input.css",
-      ".changeset"
+    "includes": [
+      "**",
+      "!**/dist/**/*",
+      "!**/.next",
+      "!**/packages/runtime-lint/input.css",
+      "!**/.changeset"
     ]
   },
   "vcs": {
@@ -18,9 +19,7 @@
     "indentStyle": "space",
     "indentWidth": 2
   },
-  "organizeImports": {
-    "enabled": true
-  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {

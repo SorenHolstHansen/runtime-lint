@@ -4,10 +4,17 @@ import { runtimeLint } from "../core/index.js";
 import { cn } from "../utils/cn.js";
 import { CaretDownIcon, InfoIcon, Logo, XIcon } from "./icons.js";
 
+type DomSizeWarnings = {
+  largeDomSize?: number;
+  largeDomDepth?: number;
+  manyChildren?: { element: Element; count: number }[];
+};
+
 export function Widget() {
   const [queriesInLoop, setQueriesInLoop] = useState<string[]>([]);
   const [duplicateResponses, setDuplicateResponses] = useState<string[]>([]);
   const [overFetching, setOverFetching] = useState<string[]>([]);
+  const [domSizeWarnings, setDomSizeWarnings] = useState<DomSizeWarnings>({});
   const [showWidgetScreen, setShowWidgetScreen] = useState(false);
   const numErrors = useMemo(() => {
     return (
@@ -26,6 +33,11 @@ export function Widget() {
       overFetching: {
         cb: (url) => setOverFetching((c) => [...c, url.toString()]),
       },
+      domSize: {
+        cb: (largeDomSize, largeDomDepth, manyChildren) => {
+          setDomSizeWarnings({ largeDomSize, largeDomDepth, manyChildren });
+        },
+      },
     });
   }, []);
   return (
@@ -40,6 +52,7 @@ export function Widget() {
             queriesInLoop={queriesInLoop}
             duplicateResponses={duplicateResponses}
             overFetching={overFetching}
+            domSizeWarnings={domSizeWarnings}
             onClose={() => setShowWidgetScreen(false)}
           />
         )}
@@ -52,11 +65,13 @@ function WidgetScreen({
   queriesInLoop,
   duplicateResponses,
   overFetching,
+  domSizeWarnings,
   onClose,
 }: {
   queriesInLoop: string[];
   duplicateResponses: string[];
   overFetching: string[];
+  domSizeWarnings: DomSizeWarnings;
   onClose: () => void;
 }) {
   const duplicateResponsesByUrl = useMemo(() => {
@@ -138,6 +153,81 @@ function WidgetScreen({
               </ul>
             </LintCard>
           )}
+          {domSizeWarnings.largeDomDepth ||
+            domSizeWarnings.largeDomSize ||
+            (domSizeWarnings.manyChildren && (
+              <LintCard
+                title="Dom Size warnings"
+                description="Detected an unusually large DOM size"
+                details={`We detected a DOM that had an unusual size.
+              This could either be that the DOM has more than 1'500 nodes, that the depth exceeds 32 or that some node has more than 60 children.`}
+                numCases={
+                  Object.values(domSizeWarnings).filter(
+                    (value) => value != null,
+                  ).length
+                }
+              >
+                <div class="space-y-1">
+                  {domSizeWarnings.largeDomSize && (
+                    <p>The DOM has {domSizeWarnings.largeDomSize} nodes.</p>
+                  )}
+                  {domSizeWarnings.largeDomDepth && (
+                    <p>
+                      The DOM has a depth of {domSizeWarnings.largeDomDepth}.
+                    </p>
+                  )}
+                  {domSizeWarnings.manyChildren && (
+                    <div>
+                      <p>The following nodes has a large amount of children.</p>
+                      <div>
+                        {domSizeWarnings.manyChildren.map(
+                          ({ element, count }, i) => (
+                            <button
+                              // biome-ignore lint/suspicious/noArrayIndexKey: Doesn't matter as the order never changes
+                              key={i}
+                              type="button"
+                              onClick={() => element.scrollTo()}
+                              onMouseOver={() => {
+                                if (element instanceof HTMLElement) {
+                                  // biome-ignore lint/suspicious/noExplicitAny: I know this is not the best, but will live with it
+                                  (element as any)._orig_box_shadow =
+                                    element.style.boxShadow;
+                                  element.style.boxShadow = "0 0 0 2px red";
+                                }
+                              }}
+                              onFocus={() => {
+                                if (element instanceof HTMLElement) {
+                                  // biome-ignore lint/suspicious/noExplicitAny: I know this is not the best, but will live with it
+                                  (element as any)._orig_box_shadow =
+                                    element.style.boxShadow;
+                                  element.style.boxShadow = "0 0 0 2px red";
+                                }
+                              }}
+                              onMouseOut={() => {
+                                if (element instanceof HTMLElement) {
+                                  element.style.boxShadow =
+                                    // biome-ignore lint/suspicious/noExplicitAny: I know this is not the best, but will live with it
+                                    (element as any)._orig_box_shadow;
+                                }
+                              }}
+                              onBlur={() => {
+                                if (element instanceof HTMLElement) {
+                                  element.style.boxShadow =
+                                    // biome-ignore lint/suspicious/noExplicitAny: I know this is not the best, but will live with it
+                                    (element as any)._orig_box_shadow;
+                                }
+                              }}
+                            >
+                              {element.tagName}: {count}
+                            </button>
+                          ),
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </LintCard>
+            ))}
         </div>
       </div>
     </div>
@@ -147,7 +237,10 @@ function WidgetScreen({
 function WidgetFloat({
   numErrors,
   onClick,
-}: { numErrors: number; onClick: () => void }) {
+}: {
+  numErrors: number;
+  onClick: () => void;
+}) {
   return (
     <button
       class="cursor-pointer hover:bg-background/90 transition-colors rounded-full bg-background flex items-center"
@@ -218,10 +311,10 @@ function LintCard({
         </div>
 
         {expanded && (
-          <div>
+          <button type="button" onClick={(e) => e.stopPropagation()}>
             <hr class="h-px w-full bg-ring my-1" />
             <div class="text-xs p-2">{children}</div>
-          </div>
+          </button>
         )}
       </button>
 
@@ -231,6 +324,7 @@ function LintCard({
         onKeyDown={() => dialogRef.current?.close()}
         ref={dialogRef}
       >
+        {/** biome-ignore lint/a11y/noStaticElementInteractions: This should definitely not be a button either, just for disabling propagation */}
         <div
           onKeyDown={(e) => e.stopPropagation()}
           onClick={(e) => e.stopPropagation()}
